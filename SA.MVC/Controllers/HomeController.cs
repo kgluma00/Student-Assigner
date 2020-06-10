@@ -32,6 +32,7 @@ namespace SA.MVC.Controllers
             return View();
         }
 
+
         [HttpGet]
         public ActionResult Login()
         {
