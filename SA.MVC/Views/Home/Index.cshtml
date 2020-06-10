@@ -1,14 +1,16 @@
-﻿@model UserHomeDto
+﻿@model FrontPageDto
 @{
     ViewData["Title"] = "Home Page";
-    if (Model.RoleId == 1)
+    if (Model.UserHomeDto.RoleId == 1)
     {
         Layout = "_Layout";
     }
-    else if (Model.RoleId == 2)
+    else if (Model.UserHomeDto.RoleId == 2)
     {
         Layout = "_LayoutProfessor";
     }
+
+    var professors = new List<SA.Core.Dtos.ProfessorBasicInfoDto>();
 }
 
 <div class="text-center">
@@ -16,89 +18,124 @@
     <p>Molimo vas odaberite željene mentore</a>.</p>
 </div>
 
-<div class="container">
-    <div class="row h-100 justify-content-center align-items-center text-center">
-        <table>
-            <tr>
-                <td>
-                    <h1>Profesori</h1>
-                </td>
-                <td>
-                    <h1>Odabir</h1>
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <div id="dvleft">
-                        <ul id="lstproducts">
+<div class="container h-100">
+    <div class="row h-100 justify-content-between">
+        <div class="col-5">
+            <div class="card h-75">
+                <div class="card-body h-100">
+                    <h5 class="card-title">Ponuđeni mentori</h5>
+                    <p class="card-text">Molimo vas odaberi točno <strong>pet</strong> mentora.</p>
+                    <hr />
+                    <div class="col overflow-auto mh-100">
+                        <ul class="list-group border-0">
+                            @foreach (var professor in Model.ProfessorBasicInfoDtos)
+                            {
+                                <li class="list-group-item border-0">
+                                    <a class="btn btn-secondary" href="#">@professor.FirstName @professor.LastName</a>
+                                    <footer class="blockquote-footer">@professor.AreaOfInterestOne, @professor.AreaOfInterestTwo, @professor.AreaOfInterestThree</footer>
+                                </li>
+                            }
                         </ul>
                     </div>
-                </td>
-                <td>
-                    <div id="dvright">
-                        <ul id="lstselectedproducts"></ul>
-                    </div>
-                </td>
-            </tr>
-        </table>
-    </div>
-    <div class="row mt-5 justify-content-center align-items-center text-center">
-        <button type="button" class="btn btn-primary text-center w-50">Spremi odabir</button>
+                </div>
+            </div>
+        </div>
+        <div class="col-5">
+            <div class="card h-75">
+                <div class="card-body">
+                    <h5 class="card-title">Special title treatment</h5>
+                    <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
+                    <a href="#" class="btn btn-primary">Go somewhere</a>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 
-@section Scripts
-{
-    <script type="text/javascript">
-        $(document).ready(function () {
-            loadProducts();
 
-            //Function to set events for Drag-Drop
-            function setEvents() {
-                var lstProducts = $('li');
-                //Set Drag on Each 'li' in the list
-                $.each(lstProducts, function (idx, val) {
-                    $('li').on('dragstart', function (evt) {
-                        evt.originalEvent.dataTransfer.setData("Text", evt.target.textContent);
-                        evt.target.draggable = false;
-                    });
-                });
+@*<div class="container">
+        <div class="row h-100 justify-content-center align-items-center text-center">
+            <table>
+                <tr>
+                    <td>
+                        <h1>Profesori</h1>
+                    </td>
+                    <td>
+                        <h1>Odabir</h1>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <div id="dvleft">
+                            <ul id="lstproducts">
+                            </ul>
+                        </div>
+                    </td>
+                    <td>
+                        <div id="dvright">
+                            <ul id="lstselectedproducts"></ul>
+                        </div>
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <div class="row mt-5 justify-content-center align-items-center text-center">
+            <button type="button" class="btn btn-primary text-center w-50">Spremi odabir</button>
+        </div>
+    </div>*@
 
-                //Set the Drop on the <div>
-                $("#dvright").on('drop', function (evt) {
-                    evt.preventDefault();
-                    var data = evt.originalEvent.dataTransfer.getData("Text");
-                    var lst = $("#lstselectedproducts");
-                    var li = "<li>" + data + "</li>";
-                    li.textContent = data;
-                    lst.append(li);
-                });
+@*@section Scripts
+    {
+        <script type="text/javascript">
+            $(document).ready(function () {
+                loadProducts();
 
-                //The dragover
-                $("#dvright").on('dragover', function (evt) {
-                    evt.preventDefault();
-                });
-            }
-
-            ///Function to load products using call to WEB API
-            function loadProducts() {
-                var items = "";
-                $.ajax({
-                    url: '@Url.Action("GetProfessorsByCourse", "Users", new { id = @Model.Id})',
-                    type: "GET",
-                    success: function (resp) {
-                        console.log(resp);
-                        $.each(resp, function (idx, val) {
-                            items += "<li draggable='true'>" + val.firstName + ' ' + val.lastName + "</li>";
+                //Function to set events for Drag-Drop
+                function setEvents() {
+                    var lstProducts = $('li');
+                    //Set Drag on Each 'li' in the list
+                    $.each(lstProducts, function (idx, val) {
+                        $('li').on('dragstart', function (evt) {
+                            evt.originalEvent.dataTransfer.setData("Text", evt.target.textContent);
+                            evt.target.draggable = false;
                         });
-                        $("#lstproducts").html(items);
-                        setEvents();
-                    },
-                    error: function (err) {
-                        alert("Error! " + err.status);
-                    }
-                });
-            };
-        });
-    </script>
-}
+                    });
+
+                    //Set the Drop on the <div>
+                    $("#dvright").on('drop', function (evt) {
+                        evt.preventDefault();
+                        var data = evt.originalEvent.dataTransfer.getData("Text");
+                        var lst = $("#lstselectedproducts");
+                        var li = "<li>" + data + "</li>";
+                        li.textContent = data;
+                        lst.append(li);
+                    });
+
+                    //The dragover
+                    $("#dvright").on('dragover', function (evt) {
+                        evt.preventDefault();
+                    });
+                }
+
+                ///Function to load products using call to WEB API
+                function loadProducts() {
+                    var items = "";
+                    $.ajax({
+                        url: '@Url.Action("GetProfessorsByCourse", "Users", new { id = @Model.Id})',
+                        type: "GET",
+                        success: function (resp) {
+                            console.log(resp);
+                            $.each(resp, function (idx, val) {
+                                items += "<li draggable='true'>" + val.firstName + ' ' + val.lastName + "</li>";
+                            });
+                            $("#lstproducts").html(items);
+                            //setEvents();
+                        },
+                        error: function (err) {
+                            alert("Error! " + err.status);
+                        }
+                    });
+                };
+            });
+        </script>
+    }*@
