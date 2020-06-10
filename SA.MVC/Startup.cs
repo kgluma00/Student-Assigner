@@ -1,10 +1,5 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -12,7 +7,6 @@ using Microsoft.Extensions.Hosting;
 using Sa.Repository;
 using Sa.Repository.DI;
 using Sa.Repository.Mappings;
-using SA.Core.Interfaces;
 
 namespace SA.MVC
 {
@@ -38,7 +32,6 @@ namespace SA.MVC
             var mapper = config.CreateMapper();
             services.AddSingleton(mapper);
 
-            //services.AddScoped<ISaRepository, SaRepository>();
             services.AddRepositoriesCollection();
         }
 

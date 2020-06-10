@@ -12,6 +12,7 @@ namespace SA.Core.Dtos
         public string LastName { get; set; }
         public DateTime DoB { get; set; }
         public string CountryOfBirth { get; set; }
+        public string Email { get; set; }
         public byte RoleId { get; set; }
     }
 }

@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using SA.Core.Dtos;
+using SA.MVC.Models;
 
 namespace SA.MVC.Controllers
 {
@@ -20,6 +21,12 @@ namespace SA.MVC.Controllers
         public ActionResult Login()
         {
             return View();
+        }
+
+        [HttpPost]
+        public ActionResult Login(LoginDto dto)
+        {
+            return Ok();
         }
 
         // GET: HomeController/Details/5

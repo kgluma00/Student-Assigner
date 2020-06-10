@@ -25,6 +25,7 @@ namespace SA.MVC.Controllers.ApiControllers
         }
 
         [HttpPost]
+        [Route("users")]
         public async Task<ActionResult> SaveUser(List<UserDto> dto)
         {
             await _context.AddAsyncEntity(_mapper.Map<List<UserDto>, List<User>>(dto));

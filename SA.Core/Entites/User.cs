@@ -18,6 +18,8 @@ namespace SA.Core.Entites
         public DateTime DoB { get; set; }
         [Column(TypeName = "varchar(20)")]
         public string CountryOfBirth { get; set; }
+        [Column(TypeName = "varchar(50)")]
+        public string Email { get; set; }
         public Role Role { get; set; }
     }
 }
