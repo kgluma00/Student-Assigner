@@ -1,7 +1,6 @@
-﻿using SA.Core.Entites;
-using System;
+﻿using SA.Core.Dtos;
+using SA.Core.Entites;
 using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace SA.Core.Interfaces
@@ -10,5 +9,8 @@ namespace SA.Core.Interfaces
     {
         Task<int> AddAsyncEntity<T>(List<T> entites) where T : class;
         Task<User> Login(User user);
+        Task<List<ProfessorBasicInfoDto>> GetProfessorsByCourse(byte courseId);
+        Task<Student> GetStudentById(int userId);
+
     }
 }

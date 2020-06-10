@@ -1,7 +1,6 @@
-﻿using SA.Core.Entites;
-using System;
+﻿using SA.Core.Dtos;
+using SA.Core.Entites;
 using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace SA.Business.Interfaces
@@ -9,5 +8,6 @@ namespace SA.Business.Interfaces
     public interface IUserService
     {
         Task<User> Login(User user);
+        Task<List<ProfessorBasicInfoDto>> GetProfessorsByCourse(int userId);
     }
 }

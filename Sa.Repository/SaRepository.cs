@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using SA.Core.Dtos;
 using SA.Core.Entites;
 using SA.Core.Interfaces;
 using System;
@@ -26,6 +27,32 @@ namespace Sa.Repository
             }
 
             return await _applicationContext.SaveChangesAsync();
+        }
+
+        public async Task<List<ProfessorBasicInfoDto>> GetProfessorsByCourse(byte courseId)
+        {
+           return await (from p in _applicationContext.Professors
+                     join u in _applicationContext.Users
+                     on p.UserId equals u.Id
+                     where p.CourseId == courseId
+                     select new ProfessorBasicInfoDto
+                     {
+                         Id = u.Id,
+                         FirstName = u.FirstName,
+                         LastName = u.LastName,
+                         Email = u.Email,
+                         AreaOfInterestOne = p.AreaOfInterestOne,
+                         AreaOfInterestTwo = p.AreaOfInterestTwo,
+                         AreaOfInterestThree = p.AreaOfInterestThree
+                     }
+                     ).ToListAsync();
+        }
+
+        public async Task<Student> GetStudentById(int userId)
+        {
+            var userFromDb = await _applicationContext.Students.Where(i => i.UserId == userId).FirstOrDefaultAsync();
+
+            return userFromDb;
         }
 
         public async Task<User> Login(User user)
