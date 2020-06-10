@@ -28,10 +28,10 @@ namespace Sa.Repository
             return await _applicationContext.SaveChangesAsync();
         }
 
-        public async Task<int> Login(User user)
+        public async Task<User> Login(User user)
         {
-            var userFromDb = await _applicationContext.Users.Where(u => u.Id == user.Id).FirstOrDefaultAsync();
-            return userFromDb.Id;
+            var userFromDb = await _applicationContext.Users.Where(u => u.Email == user.Email).FirstOrDefaultAsync();
+            return userFromDb;
         }
     }
 }

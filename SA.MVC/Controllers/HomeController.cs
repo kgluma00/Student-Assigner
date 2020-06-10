@@ -1,16 +1,31 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
+using AutoMapper;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using SA.Business.Interfaces;
 using SA.Core.Dtos;
+using SA.Core.Entites;
+using SA.Core.Interfaces;
 using SA.MVC.Models;
 
 namespace SA.MVC.Controllers
 {
     public class HomeController : Controller
     {
+        public IMapper _mapper { get; }
+        private readonly IUserService _userService;
+
+        public HomeController(IMapper mapper, IUserService userService)
+        {
+            _mapper = mapper;
+            _userService = userService;
+        }
+
         // GET: HomeController
         public ActionResult Index()
         {
@@ -24,78 +39,21 @@ namespace SA.MVC.Controllers
         }
 
         [HttpPost]
-        public ActionResult Login(LoginDto dto)
+        public async Task<ActionResult> Login(LoginDto dto)
         {
-            return Ok();
-        }
+            var user = await _userService.Login(_mapper.Map<LoginDto, User>(dto));
 
-        // GET: HomeController/Details/5
-        public ActionResult Details(int id)
-        {
-            return View();
-        }
-
-        // GET: HomeController/Create
-        public ActionResult Create()
-        {
-            return View();
-        }
-
-        // POST: HomeController/Create
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
-        {
-            try
+            var userClaims = new List<Claim>()
             {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
-        }
+                new Claim(ClaimTypes.Email, user.Email),
+                new Claim(ClaimTypes.Name, user.RoleId.ToString()),
+            };
 
-        // GET: HomeController/Edit/5
-        public ActionResult Edit(int id)
-        {
-            return View();
-        }
+            var userIdentity = new ClaimsIdentity(userClaims, "User Identity");
+            var userPrincipal = new ClaimsPrincipal(new[] { userIdentity });
+            await HttpContext.SignInAsync(userPrincipal);
 
-        // POST: HomeController/Edit/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
-        {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
-        }
-
-        // GET: HomeController/Delete/5
-        public ActionResult Delete(int id)
-        {
-            return View();
-        }
-
-        // POST: HomeController/Delete/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
-        {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
+            return View("Index", _mapper.Map<User, UserHomeDto>(user));
         }
     }
 }

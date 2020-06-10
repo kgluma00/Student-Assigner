@@ -8,10 +8,13 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sa.Repository", "Sa.Repository\Sa.Repository.csproj", "{A17D83F5-C268-4EAE-A7A6-A081028AB65B}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SA.MVC", "SA.MVC\SA.MVC.csproj", "{13CFC7BB-0A79-4362-A77B-6745F286160B}"
+	ProjectSection(ProjectDependencies) = postProject
+		{F891A477-5B3D-4E79-9069-9BA7CFC4C6E5} = {F891A477-5B3D-4E79-9069-9BA7CFC4C6E5}
+	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Clients", "Clients", "{10988EBD-0188-4507-8795-61D73E13920D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SA.Business", "SA.Business\SA.Business.csproj", "{F891A477-5B3D-4E79-9069-9BA7CFC4C6E5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SA.Business", "SA.Business\SA.Business.csproj", "{F891A477-5B3D-4E79-9069-9BA7CFC4C6E5}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

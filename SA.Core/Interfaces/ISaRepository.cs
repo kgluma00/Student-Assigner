@@ -9,6 +9,6 @@ namespace SA.Core.Interfaces
     public interface ISaRepository
     {
         Task<int> AddAsyncEntity<T>(List<T> entites) where T : class;
-        Task<int> Login(User user);
+        Task<User> Login(User user);
     }
 }

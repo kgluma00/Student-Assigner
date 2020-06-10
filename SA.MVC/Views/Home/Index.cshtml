@@ -1,5 +1,14 @@
-﻿@{
+﻿@model UserHomeDto
+@{
     ViewData["Title"] = "Home Page";
+    if (Model.RoleId == 1)
+    {
+        Layout = "_Layout";
+    }
+    else if (Model.RoleId == 2)
+    {
+        Layout = "_LayoutProfessor";
+    }
 }
 
 <div class="text-center">
