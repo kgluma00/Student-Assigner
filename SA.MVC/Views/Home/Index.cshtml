@@ -26,13 +26,6 @@
                     <hr />
                     <div class="row overflow-auto" style="height:82%">
                         <ul class="list-group border-0" id="lst">
-                            @*@foreach (var professor in Model.ProfessorBasicInfoDtos)
-                                {
-                                    <li class="list-group-item border-0">
-                                        <a class="btn btn-secondary professor" id="@professor.Id" href="#">@professor.FirstName @professor.LastName</a>
-                                        <footer class="blockquote-footer">@professor.AreaOfInterestOne, @professor.AreaOfInterestTwo, @professor.AreaOfInterestThree</footer>
-                                    </li>
-                                }*@
                         </ul>
                     </div>
                 </div>
@@ -98,6 +91,7 @@
         $(document).ready(function () {
 
             loadData();
+
             function loadData() {
                 var items = '';
                 $.ajax({
@@ -112,17 +106,25 @@
 
                             var liElement = document.createElement("li");
                             liElement.className = "list-group-item border-0";
+                            liElement.id = val.id;
                             var aElement = document.createElement("a");
                             aElement.textContent = val.firstName + ' ' + val.lastName;
                             aElement.className = "btn btn-secondary professor";
                             aElement.href = "#";
-                            aElement.id = val.id;
                             liElement.appendChild(aElement);
                             liElement.appendChild(footer);
                             el.push(liElement);
                         });
                         $("#lst").html(el);
-                        //setEvents();
+                        // fetcha sve buttone koji imaju klasu find-more
+                        const buttonList = document.querySelectorAll('.list-group-item a');
+                        // Dodati referencu na klik na svaki dohvaćeni "button"
+                        for (let i = 0; i < buttonList.length; i++) {
+                            const button = buttonList[i];
+                            console.log(button);
+                            // Referenca na funkciju "handleButtonClick" koja automatski šalje "event" parametar
+                            button.addEventListener('click', handleButtonClick);
+                        }
                     },
                     error: function (err) {
                         alert("Error! " + err.status);
@@ -130,60 +132,13 @@
                 });
             };
         });
+
+        function handleButtonClick(e)
+        {
+            //console.log(e.path[1].id);
+            document.getElementById(e.path[1].id).remove();
+        }
+   
+
     </script>
 }
-
-@*<script type="text/javascript">
-        $(document).ready(function () {
-            loadProducts();
-
-            //Function to set events for Drag-Drop
-            function setEvents() {
-                var lstProducts = $('li');
-                //Set Drag on Each 'li' in the list
-                $.each(lstProducts, function (idx, val) {
-                    $('li').on('dragstart', function (evt) {
-                        evt.originalEvent.dataTransfer.setData("Text", evt.target.textContent);
-                        evt.target.draggable = false;
-                    });
-                });
-
-                //Set the Drop on the <div>
-                $("#dvright").on('drop', function (evt) {
-                    evt.preventDefault();
-                    var data = evt.originalEvent.dataTransfer.getData("Text");
-                    var lst = $("#lstselectedproducts");
-                    var li = "<li>" + data + "</li>";
-                    li.textContent = data;
-                    lst.append(li);
-                });
-
-                //The dragover
-                $("#dvright").on('dragover', function (evt) {
-                    evt.preventDefault();
-                });
-            }
-
-            ///Function to load products using call to WEB API
-            function loadProducts() {
-                var items = "";
-                $.ajax({
-                    url: '@Url.Action("GetProfessorsByCourse", "Users", new { id = @Model.Id})',
-                    type: "GET",
-                    success: function (resp) {
-                        console.log(resp);
-                        $.each(resp, function (idx, val) {
-                            items += "<li draggable='true'>" + val.firstName + ' ' + val.lastName + "</li>";
-                        });
-                        $("#lstproducts").html(items);
-                        //setEvents();
-                    },
-                    error: function (err) {
-                        alert("Error! " + err.status);
-                    }
-                });
-            };
-        });
-    </script>*@
-
-
