@@ -1,11 +1,11 @@
-﻿@model FrontPageDto
+﻿@model UserHomeDto
 @{
     ViewData["Title"] = "Home Page";
-    if (Model.UserHomeDto.RoleId == 1)
+    if (Model.RoleId == 1)
     {
         Layout = "_Layout";
     }
-    else if (Model.UserHomeDto.RoleId == 2)
+    else if (Model.RoleId == 2)
     {
         Layout = "_LayoutProfessor";
     }
@@ -16,15 +16,15 @@
     <p>Molimo vas odaberite željene mentore</a>.</p>
 </div>
 
-<div class="container h-100">
-    <div class="row h-100 justify-content-between">
+<div class="container">
+    <div class="row justify-content-between">
         <div class="col-md">
             <div class="card h-75">
-                <div class="card-body h-100">
+                <div class="card-body overflow-auto">
                     <h5 class="card-title">Ponuđeni mentori</h5>
                     <p class="card-text">Molimo vas odaberi točno <strong>pet</strong> mentora.</p>
                     <hr />
-                    <div class="row overflow-auto" style="height:82%">
+                    <div class="row">
                         <ul class="list-group border-0" id="lst">
                         </ul>
                     </div>
@@ -33,11 +33,11 @@
         </div>
         <div class="col-md">
             <div class="card h-75">
-                <div class="card-body h-100">
+                <div class="card-body overflow-auto">
                     <h5 class="card-title">Odabrani mentori</h5>
                     <p class="card-text">Provjerite izbor, kasnije izmjene <strong>neće</strong> biti moguće.</p>
                     <hr />
-                    <div class="row overflow-auto h-75">
+                    <div class="row">
                         <ul class="list-group border-0" id="odabir">
                         </ul>
                     </div>
@@ -48,54 +48,21 @@
 </div>
 
 
-@*<div class="container">
-        <div class="row h-100 justify-content-center align-items-center text-center">
-            <table>
-                <tr>
-                    <td>
-                        <h1>Profesori</h1>
-                    </td>
-                    <td>
-                        <h1>Odabir</h1>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <div id="dvleft">
-                            <ul id="lstproducts">
-                            </ul>
-                        </div>
-                    </td>
-                    <td>
-                        <div id="dvright">
-                            <ul id="lstselectedproducts"></ul>
-                        </div>
-                    </td>
-                </tr>
-            </table>
-        </div>
-        <div class="row mt-5 justify-content-center align-items-center text-center">
-            <button type="button" class="btn btn-primary text-center w-50">Spremi odabir</button>
-        </div>
-    </div>*@
-
 @section Scripts
     {
 
     <script type="text/javascript">
-        var el = [];
-
-    //$(document).on("click", ".professor", function () {
-    //    var clickedBtnID = $(this).attr('id'); // or var clickedBtnID = this.id
+        var professorArray = [];
+        var chosenProfessorArray = [];
 
         $(document).ready(function () {
 
             loadData();
-
+            //Dohvaća sve podatke preko APIJA
             function loadData() {
                 var items = '';
                 $.ajax({
-                    url: '@Url.Action("GetProfessorsByCourse", "Users", new { id = @Model.UserHomeDto.Id})',
+                    url: '@Url.Action("GetProfessorsByCourse", "Users", new { id = @Model.Id})',
                     type: "GET",
                     success: function (resp) {
                         $.each(resp, function (idx, val) {
@@ -109,19 +76,18 @@
                             liElement.id = val.id;
                             var aElement = document.createElement("a");
                             aElement.textContent = val.firstName + ' ' + val.lastName;
-                            aElement.className = "btn btn-secondary professor";
+                            aElement.className = "btn btn-success professor";
                             aElement.href = "#";
                             liElement.appendChild(aElement);
                             liElement.appendChild(footer);
-                            el.push(liElement);
+                            professorArray.push(liElement);
                         });
-                        $("#lst").html(el);
-                        // fetcha sve buttone koji imaju klasu find-more
+                        $("#lst").html(professorArray);
+                        // fetcha sve buttone koji imaju klasu .list-group-item
                         const buttonList = document.querySelectorAll('.list-group-item a');
                         // Dodati referencu na klik na svaki dohvaćeni "button"
                         for (let i = 0; i < buttonList.length; i++) {
                             const button = buttonList[i];
-                            console.log(button);
                             // Referenca na funkciju "handleButtonClick" koja automatski šalje "event" parametar
                             button.addEventListener('click', handleButtonClick);
                         }
@@ -135,10 +101,64 @@
 
         function handleButtonClick(e)
         {
-            //console.log(e.path[1].id);
-            document.getElementById(e.path[1].id).remove();
+            console.log(e);
+            var i;
+
+            if (e.path[2].id == "lst") {
+
+                for (i = 0; i < professorArray.length; i++) {
+                    if (professorArray[i].id == e.path[1].id)
+                        professorArray.splice(i, 1);
+                }
+                console.log(professorArray);
+
+                document.getElementById(e.path[1].id).remove();
+
+                var footer = document.createElement("footer");
+                footer.className = "blockquote-footer";
+                footer.textContent = e.target.nextSibling.innerText;
+
+                var liElement = document.createElement("li");
+                liElement.className = "list-group-item border-0";
+                liElement.id = e.path[1].id
+
+                var aElement = document.createElement("a");
+
+                aElement.textContent = e.target.innerText;
+                aElement.className = "btn btn-danger professor";
+                aElement.href = "#";
+                liElement.appendChild(aElement);
+                liElement.appendChild(footer);
+                liElement.addEventListener("click", handleButtonClick);
+
+                chosenProfessorArray.push(liElement);
+                $("#odabir").html(chosenProfessorArray);
+            }
+            else if (e.path[2].id == "odabir")
+            {
+                console.log("niz1: " + professorArray.length);
+                console.log("niz2: " + chosenProfessorArray.length);
+                document.getElementById(e.path[1].id).remove();
+
+                var footer = document.createElement("footer");
+                footer.className = "blockquote-footer";
+                footer.textContent = e.target.nextSibling.innerText;
+
+                var liElement = document.createElement("li");
+                liElement.className = "list-group-item border-0";
+
+                var aElement = document.createElement("a");
+                aElement.textContent = e.target.innerText;
+                aElement.className = "btn btn-success professor";
+                aElement.href = "#";
+
+                liElement.appendChild(aElement);
+                liElement.appendChild(footer);
+                liElement.addEventListener("click", handleButtonClick);
+
+                professorArray.push(liElement);
+            }
         }
-   
 
     </script>
 }

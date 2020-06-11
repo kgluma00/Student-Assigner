@@ -54,9 +54,9 @@ namespace SA.MVC.Controllers
             var userPrincipal = new ClaimsPrincipal(new[] { userIdentity });
             await HttpContext.SignInAsync(userPrincipal);
 
-            var professorsDto = await _userService.GetProfessorsByCourse(user.Id);
+            //var professorsDto = await _userService.GetProfessorsByCourse(user.Id);
 
-            return View("Index",new FrontPageDto { UserHomeDto = _mapper.Map<User, UserHomeDto>(user), ProfessorBasicInfoDtos = professorsDto});
+            return View("Index", _mapper.Map<User, UserHomeDto>(user));
         }
     }
 }
