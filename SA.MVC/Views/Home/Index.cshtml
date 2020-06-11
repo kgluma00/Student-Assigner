@@ -24,15 +24,15 @@
                     <h5 class="card-title">Ponuđeni mentori</h5>
                     <p class="card-text">Molimo vas odaberi točno <strong>pet</strong> mentora.</p>
                     <hr />
-                    <div class="row overflow-auto" style="height:78%">
-                        <ul class="list-group border-0">
-                            @foreach (var professor in Model.ProfessorBasicInfoDtos)
-                            {
-                                <li class="list-group-item border-0">
-                                    <a class="btn btn-secondary professor" id="@professor.Id" href="#">@professor.FirstName @professor.LastName</a>
-                                    <footer class="blockquote-footer">@professor.AreaOfInterestOne, @professor.AreaOfInterestTwo, @professor.AreaOfInterestThree</footer>
-                                </li>
-                            }
+                    <div class="row overflow-auto" style="height:82%">
+                        <ul class="list-group border-0" id="lst">
+                            @*@foreach (var professor in Model.ProfessorBasicInfoDtos)
+                                {
+                                    <li class="list-group-item border-0">
+                                        <a class="btn btn-secondary professor" id="@professor.Id" href="#">@professor.FirstName @professor.LastName</a>
+                                        <footer class="blockquote-footer">@professor.AreaOfInterestOne, @professor.AreaOfInterestTwo, @professor.AreaOfInterestThree</footer>
+                                    </li>
+                                }*@
                         </ul>
                     </div>
                 </div>
@@ -42,7 +42,7 @@
             <div class="card h-75">
                 <div class="card-body h-100">
                     <h5 class="card-title">Odabrani mentori</h5>
-                    <p class="card-text">Prije spremanja još jednom provjerite izbor, kasnije izmjene <strong>neće</strong> biti moguće.</p>
+                    <p class="card-text">Provjerite izbor, kasnije izmjene <strong>neće</strong> biti moguće.</p>
                     <hr />
                     <div class="row overflow-auto h-75">
                         <ul class="list-group border-0" id="odabir">
@@ -89,90 +89,101 @@
 @section Scripts
     {
 
-    <script>
+    <script type="text/javascript">
+        var el = [];
 
-    $(document).on("click", ".professor", function () {
-        var clickedBtnID = $(this).attr('id'); // or var clickedBtnID = this.id
-        var val = 2;
+    //$(document).on("click", ".professor", function () {
+    //    var clickedBtnID = $(this).attr('id'); // or var clickedBtnID = this.id
 
-        var items = "<li class='list-group-item border-0'>" + "<a class='btn btn-secondary professor' id='" + val + "' > patkica</a>" + "</li>"
+        $(document).ready(function () {
 
-            + " <footer class='blockquote-footer'>patka</footer>"
+            loadData();
+            function loadData() {
+                var items = '';
+                $.ajax({
+                    url: '@Url.Action("GetProfessorsByCourse", "Users", new { id = @Model.UserHomeDto.Id})',
+                    type: "GET",
+                    success: function (resp) {
+                        $.each(resp, function (idx, val) {
 
-        console.log(items);
+                            var footer = document.createElement("footer");
+                            footer.className = "blockquote-footer";
+                            footer.textContent = val.areaOfInterestOne + ', ' + val.areaOfInterestTwo + ', ' + val.areaOfInterestThree;
 
-	    @*$.ajax({
-		    url: '@Url.Action("GetProfessorsByCourse", "Users", new { id = @Model.UserHomeDto.Id})',
-		    type: "GET",
-		    success: function (resp) {
-			    console.log(resp);
-			    $.each(resp, function (idx, val) {
-                    items += "<li class='list-group-item border-0'>" + "<a class='btn btn-secondary professor' id='" + val.id +"' > patkica</a>" + "</li>"
-                              
-                        + " <footer class='blockquote-footer'>patka</footer>"
-				    console.log(val);
-			    });
-			    $("#lstproducts").html(items);
-			    //setEvents();
-		    },
-		    error: function (err) {
-			    alert("Error! " + err.status);
-		    }
-	    });*@
-
-    </script>
-    @*<script type="text/javascript">
-            $(document).ready(function () {
-                loadProducts();
-
-                //Function to set events for Drag-Drop
-                function setEvents() {
-                    var lstProducts = $('li');
-                    //Set Drag on Each 'li' in the list
-                    $.each(lstProducts, function (idx, val) {
-                        $('li').on('dragstart', function (evt) {
-                            evt.originalEvent.dataTransfer.setData("Text", evt.target.textContent);
-                            evt.target.draggable = false;
+                            var liElement = document.createElement("li");
+                            liElement.className = "list-group-item border-0";
+                            var aElement = document.createElement("a");
+                            aElement.textContent = val.firstName + ' ' + val.lastName;
+                            aElement.className = "btn btn-secondary professor";
+                            aElement.href = "#";
+                            aElement.id = val.id;
+                            liElement.appendChild(aElement);
+                            liElement.appendChild(footer);
+                            el.push(liElement);
                         });
-                    });
-
-                    //Set the Drop on the <div>
-                    $("#dvright").on('drop', function (evt) {
-                        evt.preventDefault();
-                        var data = evt.originalEvent.dataTransfer.getData("Text");
-                        var lst = $("#lstselectedproducts");
-                        var li = "<li>" + data + "</li>";
-                        li.textContent = data;
-                        lst.append(li);
-                    });
-
-                    //The dragover
-                    $("#dvright").on('dragover', function (evt) {
-                        evt.preventDefault();
-                    });
-                }
-
-                ///Function to load products using call to WEB API
-                function loadProducts() {
-                    var items = "";
-                    $.ajax({
-                        url: '@Url.Action("GetProfessorsByCourse", "Users", new { id = @Model.Id})',
-                        type: "GET",
-                        success: function (resp) {
-                            console.log(resp);
-                            $.each(resp, function (idx, val) {
-                                items += "<li draggable='true'>" + val.firstName + ' ' + val.lastName + "</li>";
-                            });
-                            $("#lstproducts").html(items);
-                            //setEvents();
-                        },
-                        error: function (err) {
-                            alert("Error! " + err.status);
-                        }
-                    });
-                };
-            });
-        </script>*@
-
-
+                        $("#lst").html(el);
+                        //setEvents();
+                    },
+                    error: function (err) {
+                        alert("Error! " + err.status);
+                    }
+                });
+            };
+        });
+    </script>
 }
+
+@*<script type="text/javascript">
+        $(document).ready(function () {
+            loadProducts();
+
+            //Function to set events for Drag-Drop
+            function setEvents() {
+                var lstProducts = $('li');
+                //Set Drag on Each 'li' in the list
+                $.each(lstProducts, function (idx, val) {
+                    $('li').on('dragstart', function (evt) {
+                        evt.originalEvent.dataTransfer.setData("Text", evt.target.textContent);
+                        evt.target.draggable = false;
+                    });
+                });
+
+                //Set the Drop on the <div>
+                $("#dvright").on('drop', function (evt) {
+                    evt.preventDefault();
+                    var data = evt.originalEvent.dataTransfer.getData("Text");
+                    var lst = $("#lstselectedproducts");
+                    var li = "<li>" + data + "</li>";
+                    li.textContent = data;
+                    lst.append(li);
+                });
+
+                //The dragover
+                $("#dvright").on('dragover', function (evt) {
+                    evt.preventDefault();
+                });
+            }
+
+            ///Function to load products using call to WEB API
+            function loadProducts() {
+                var items = "";
+                $.ajax({
+                    url: '@Url.Action("GetProfessorsByCourse", "Users", new { id = @Model.Id})',
+                    type: "GET",
+                    success: function (resp) {
+                        console.log(resp);
+                        $.each(resp, function (idx, val) {
+                            items += "<li draggable='true'>" + val.firstName + ' ' + val.lastName + "</li>";
+                        });
+                        $("#lstproducts").html(items);
+                        //setEvents();
+                    },
+                    error: function (err) {
+                        alert("Error! " + err.status);
+                    }
+                });
+            };
+        });
+    </script>*@
+
+
