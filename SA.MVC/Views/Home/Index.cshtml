@@ -9,8 +9,6 @@
     {
         Layout = "_LayoutProfessor";
     }
-
-    var professors = new List<SA.Core.Dtos.ProfessorBasicInfoDto>();
 }
 
 <div class="text-center">
@@ -20,18 +18,18 @@
 
 <div class="container h-100">
     <div class="row h-100 justify-content-between">
-        <div class="col-5">
+        <div class="col-md">
             <div class="card h-75">
                 <div class="card-body h-100">
                     <h5 class="card-title">Ponuđeni mentori</h5>
                     <p class="card-text">Molimo vas odaberi točno <strong>pet</strong> mentora.</p>
                     <hr />
-                    <div class="col overflow-auto mh-100">
+                    <div class="row overflow-auto" style="height:78%">
                         <ul class="list-group border-0">
                             @foreach (var professor in Model.ProfessorBasicInfoDtos)
                             {
                                 <li class="list-group-item border-0">
-                                    <a class="btn btn-secondary" href="#">@professor.FirstName @professor.LastName</a>
+                                    <a class="btn btn-secondary professor" id="@professor.Id" href="#">@professor.FirstName @professor.LastName</a>
                                     <footer class="blockquote-footer">@professor.AreaOfInterestOne, @professor.AreaOfInterestTwo, @professor.AreaOfInterestThree</footer>
                                 </li>
                             }
@@ -40,12 +38,16 @@
                 </div>
             </div>
         </div>
-        <div class="col-5">
+        <div class="col-md">
             <div class="card h-75">
-                <div class="card-body">
-                    <h5 class="card-title">Special title treatment</h5>
-                    <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
-                    <a href="#" class="btn btn-primary">Go somewhere</a>
+                <div class="card-body h-100">
+                    <h5 class="card-title">Odabrani mentori</h5>
+                    <p class="card-text">Prije spremanja još jednom provjerite izbor, kasnije izmjene <strong>neće</strong> biti moguće.</p>
+                    <hr />
+                    <div class="row overflow-auto h-75">
+                        <ul class="list-group border-0" id="odabir">
+                        </ul>
+                    </div>
                 </div>
             </div>
         </div>
@@ -84,9 +86,42 @@
         </div>
     </div>*@
 
-@*@section Scripts
+@section Scripts
     {
-        <script type="text/javascript">
+
+    <script>
+
+    $(document).on("click", ".professor", function () {
+        var clickedBtnID = $(this).attr('id'); // or var clickedBtnID = this.id
+        var val = 2;
+
+        var items = "<li class='list-group-item border-0'>" + "<a class='btn btn-secondary professor' id='" + val + "' > patkica</a>" + "</li>"
+
+            + " <footer class='blockquote-footer'>patka</footer>"
+
+        console.log(items);
+
+	    @*$.ajax({
+		    url: '@Url.Action("GetProfessorsByCourse", "Users", new { id = @Model.UserHomeDto.Id})',
+		    type: "GET",
+		    success: function (resp) {
+			    console.log(resp);
+			    $.each(resp, function (idx, val) {
+                    items += "<li class='list-group-item border-0'>" + "<a class='btn btn-secondary professor' id='" + val.id +"' > patkica</a>" + "</li>"
+                              
+                        + " <footer class='blockquote-footer'>patka</footer>"
+				    console.log(val);
+			    });
+			    $("#lstproducts").html(items);
+			    //setEvents();
+		    },
+		    error: function (err) {
+			    alert("Error! " + err.status);
+		    }
+	    });*@
+
+    </script>
+    @*<script type="text/javascript">
             $(document).ready(function () {
                 loadProducts();
 
@@ -137,5 +172,7 @@
                     });
                 };
             });
-        </script>
-    }*@
+        </script>*@
+
+
+}
