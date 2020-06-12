@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using SA.Business.Interfaces;
 using SA.Core.Entites;
+using SA.Core.Enums;
 using SA.MVC.Models;
 
 namespace SA.MVC.Controllers
@@ -53,9 +54,7 @@ namespace SA.MVC.Controllers
             var userPrincipal = new ClaimsPrincipal(new[] { userIdentity });
             await HttpContext.SignInAsync(userPrincipal);
 
-            //var professorsDto = await _userService.GetProfessorsByCourse(user.Id);
-
-            if (user.RoleId == 1)
+            if (user.RoleId == (int)RoleEnum.Roles.Student)
             {
                 return View("~/Views/Students/Index.cshtml", _mapper.Map<User, UserHomeDto>(user));
             }

@@ -6,6 +6,7 @@ using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using SA.Business.Interfaces;
 using SA.Core.Dtos;
+using SA.MVC.Models;
 
 namespace SA.MVC.Controllers
 {
@@ -21,7 +22,11 @@ namespace SA.MVC.Controllers
 
         public IActionResult Index()
         {
-            return View();
+            var userHomeDto = new UserHomeDto();
+            var claims = User.Claims.ToList();
+            userHomeDto.RoleId = byte.Parse(claims[2].Value);
+            userHomeDto.Id = int.Parse(claims[0].Value);
+            return View(userHomeDto);
         }
 
         [HttpGet]

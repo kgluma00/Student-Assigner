@@ -1,11 +1,13 @@
-﻿@model UserHomeDto
+﻿@using SA.Core.Enums;
+
+@model UserHomeDto
 @{
     ViewData["Title"] = "Home Page";
-    if (Model.RoleId == 1)
+    if (Model.RoleId == (int)RoleEnum.Roles.Student)
     {
         Layout = "_Layout";
     }
-    else if (Model.RoleId == 2)
+    else if (Model.RoleId == (int)RoleEnum.Roles.Professor)
     {
         Layout = "_LayoutProfessor";
     }
@@ -13,7 +15,7 @@
 
 <div class="text-center">
     <h1 class="display-4">Dobrodošli</h1>
-    <p>Molimo vas odaberite željene mentore</a>.</p>
+    <p>Molimo vas odaberite željene mentore.</p>
 </div>
 
 <div class="container">
@@ -69,7 +71,6 @@
                     type: "GET",
                     success: function (resp) {
                         $.each(resp, function (idx, val) {
-
                             var footer = document.createElement("footer");
                             footer.className = "blockquote-footer";
                             footer.textContent = val.areaOfInterestOne + ', ' + val.areaOfInterestTwo + ', ' + val.areaOfInterestThree;
