@@ -9,11 +9,11 @@ using SA.Core.Dtos;
 
 namespace SA.MVC.Controllers
 {
-    public class UsersController : Controller
+    public class StudentsController : Controller
     {
         public IMapper _mapper { get; }
         private readonly IUserService _userService;
-        public UsersController(IUserService userService, IMapper mapper)
+        public StudentsController(IUserService userService, IMapper mapper)
         {
             _mapper = mapper;
             _userService = userService;
@@ -30,6 +30,12 @@ namespace SA.MVC.Controllers
             var professorBasicInfoDtos = await _userService.GetProfessorsByCourse(id);
 
             return professorBasicInfoDtos;
+        }
+
+        [HttpPost]
+        public ActionResult SaveStudentsChoices(string[] choices)
+        {
+            return Ok(choices);
         }
     }
 }

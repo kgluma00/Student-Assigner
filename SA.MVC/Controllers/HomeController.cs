@@ -8,9 +8,7 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using SA.Business.Interfaces;
-using SA.Core.Dtos;
 using SA.Core.Entites;
-using SA.Core.Interfaces;
 using SA.MVC.Models;
 
 namespace SA.MVC.Controllers
@@ -46,6 +44,7 @@ namespace SA.MVC.Controllers
 
             var userClaims = new List<Claim>()
             {
+                new Claim(ClaimTypes.Name, user.Id.ToString()),
                 new Claim(ClaimTypes.Email, user.Email),
                 new Claim(ClaimTypes.Name, user.RoleId.ToString()),
             };
@@ -56,7 +55,13 @@ namespace SA.MVC.Controllers
 
             //var professorsDto = await _userService.GetProfessorsByCourse(user.Id);
 
+            if (user.RoleId == 1)
+            {
+                return View("~/Views/Students/Index.cshtml", _mapper.Map<User, UserHomeDto>(user));
+            }
+
             return View("Index", _mapper.Map<User, UserHomeDto>(user));
+
         }
     }
 }

@@ -19,7 +19,7 @@
 <div class="container">
     <div class="row justify-content-between">
         <div class="col-md">
-            <div class="card h-75">
+            <div class="card card-height" ">
                 <div class="card-body overflow-auto">
                     <h5 class="card-title">Ponuđeni mentori</h5>
                     <p class="card-text">Molimo vas odaberi točno <strong>pet</strong> mentora.</p>
@@ -32,7 +32,7 @@
             </div>
         </div>
         <div class="col-md">
-            <div class="card h-75">
+            <div class="card card-height">
                 <div class="card-body overflow-auto">
                     <h5 class="card-title">Odabrani mentori</h5>
                     <p class="card-text">Provjerite izbor, kasnije izmjene <strong>neće</strong> biti moguće.</p>
@@ -44,6 +44,9 @@
                 </div>
             </div>
         </div>
+    </div>
+    <div class="row justify-content-around mt-5">
+        <a class="btn btn-info" href="#" onclick="SaveRecords()">Spremi odabir</a>
     </div>
 </div>
 
@@ -62,7 +65,7 @@
             function loadData() {
                 var items = '';
                 $.ajax({
-                    url: '@Url.Action("GetProfessorsByCourse", "Users", new { id = @Model.Id})',
+                    url: '@Url.Action("GetProfessorsByCourse", "Students", new { id = @Model.Id})',
                     type: "GET",
                     success: function (resp) {
                         $.each(resp, function (idx, val) {
@@ -101,7 +104,6 @@
 
         function handleButtonClick(e)
         {
-            console.log(e);
             var i;
 
             if (e.path[2].id == "lst") {
@@ -110,7 +112,6 @@
                     if (professorArray[i].id == e.path[1].id)
                         professorArray.splice(i, 1);
                 }
-                console.log(professorArray);
 
                 document.getElementById(e.path[1].id).remove();
 
@@ -127,6 +128,7 @@
                 aElement.textContent = e.target.innerText;
                 aElement.className = "btn btn-danger professor";
                 aElement.href = "#";
+
                 liElement.appendChild(aElement);
                 liElement.appendChild(footer);
                 liElement.addEventListener("click", handleButtonClick);
@@ -136,9 +138,10 @@
             }
             else if (e.path[2].id == "odabir")
             {
-                console.log("niz1: " + professorArray.length);
-                console.log("niz2: " + chosenProfessorArray.length);
-                document.getElementById(e.path[1].id).remove();
+                for (i = 0; i < chosenProfessorArray.length; i++) {
+                    if (chosenProfessorArray[i].id == e.path[1].id)
+                        chosenProfessorArray.splice(i, 1);
+                }
 
                 var footer = document.createElement("footer");
                 footer.className = "blockquote-footer";
@@ -146,18 +149,48 @@
 
                 var liElement = document.createElement("li");
                 liElement.className = "list-group-item border-0";
+                liElement.id = e.path[1].id
 
                 var aElement = document.createElement("a");
                 aElement.textContent = e.target.innerText;
                 aElement.className = "btn btn-success professor";
                 aElement.href = "#";
 
+                document.getElementById(e.path[1].id).remove();
+
                 liElement.appendChild(aElement);
                 liElement.appendChild(footer);
                 liElement.addEventListener("click", handleButtonClick);
 
                 professorArray.push(liElement);
+                $("#lst").append(liElement);
             }
+        }
+
+        function SaveRecords() {
+            var getElements = document.querySelectorAll('#odabir');
+            var records = getElements[0].childNodes;
+            var i;
+
+            //if (records.length != 5) return false;
+            var professorIds = [];
+
+            for (i = 0; i < records.length; i++) {
+                professorIds[i] = records[i].id;
+            }
+
+            $.ajax({
+                url: '@Url.Action("SaveStudentsChoices", "Students")',
+                type: "POST",
+                data: { "choices": professorIds },
+                dataType:'json',
+                success: function (resp) {
+                    console.log(resp);
+                },
+                error: function (err) {
+                    alert("Error! " + err.status);
+                }
+            });
         }
 
     </script>

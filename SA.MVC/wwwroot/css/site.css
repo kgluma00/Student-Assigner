@@ -82,3 +82,8 @@ table, td {
     height: 300px;
     width: 400px;
 }
+
+.card-height {
+
+    height:55vh;
+}
