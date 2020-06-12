@@ -35,7 +35,10 @@ namespace SA.MVC.Controllers
         [HttpPost]
         public ActionResult SaveStudentsChoices(string[] choices)
         {
-            return Ok(choices);
+            //var userId = User.Claims.ToList();
+            //_userService.SaveStudentChoices(choices, int.Parse(userId[0].Value));
+
+            return Ok();
         }
     }
 }

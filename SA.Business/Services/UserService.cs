@@ -5,6 +5,7 @@ using SA.Core.Entites;
 using SA.Core.Interfaces;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -33,6 +34,12 @@ namespace SA.Business.Services
         public async Task<User> Login(User user)
         {
             return await _saRepository.Login(user);
+        }
+
+        public void SaveStudentChoices(string[] choices, int userId)
+        {
+            var cvChoices = choices.Select(int.Parse).ToArray();
+            _saRepository.SaveStudentChoices(cvChoices, userId);
         }
     }
 }

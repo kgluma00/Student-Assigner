@@ -31,21 +31,21 @@ namespace Sa.Repository
 
         public async Task<List<ProfessorBasicInfoDto>> GetProfessorsByCourse(byte courseId)
         {
-           return await (from p in _applicationContext.Professors
-                     join u in _applicationContext.Users
-                     on p.UserId equals u.Id
-                     where p.CourseId == courseId
-                     select new ProfessorBasicInfoDto
-                     {
-                         Id = u.Id,
-                         FirstName = u.FirstName,
-                         LastName = u.LastName,
-                         Email = u.Email,
-                         AreaOfInterestOne = p.AreaOfInterestOne,
-                         AreaOfInterestTwo = p.AreaOfInterestTwo,
-                         AreaOfInterestThree = p.AreaOfInterestThree
-                     }
-                     ).ToListAsync();
+            return await (from p in _applicationContext.Professors
+                          join u in _applicationContext.Users
+                          on p.UserId equals u.Id
+                          where p.CourseId == courseId
+                          select new ProfessorBasicInfoDto
+                          {
+                              Id = u.Id,
+                              FirstName = u.FirstName,
+                              LastName = u.LastName,
+                              Email = u.Email,
+                              AreaOfInterestOne = p.AreaOfInterestOne,
+                              AreaOfInterestTwo = p.AreaOfInterestTwo,
+                              AreaOfInterestThree = p.AreaOfInterestThree
+                          }
+                      ).ToListAsync();
         }
 
         public async Task<Student> GetStudentById(int userId)
@@ -59,6 +59,13 @@ namespace Sa.Repository
         {
             var userFromDb = await _applicationContext.Users.Where(u => u.Email == user.Email).FirstOrDefaultAsync();
             return userFromDb;
+        }
+
+        public void SaveStudentChoices(int[] choices, int userId)
+        {
+            var spChoices = choices.Select((c, i) => new StudentProfessorChoices() { StudentId = userId, ProfessorId = c, Factor = (byte)(i + 1) });
+            _applicationContext.StudentProfessorChoices.AddRange(spChoices);
+            _applicationContext.SaveChanges();
         }
     }
 }

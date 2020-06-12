@@ -11,6 +11,7 @@ namespace SA.Core.Interfaces
         Task<User> Login(User user);
         Task<List<ProfessorBasicInfoDto>> GetProfessorsByCourse(byte courseId);
         Task<Student> GetStudentById(int userId);
-
+        void SaveStudentChoices(int[] choices, int userId);
+        
     }
 }
