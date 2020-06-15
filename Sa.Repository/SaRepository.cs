@@ -56,6 +56,8 @@ namespace Sa.Repository
             return userFromDb;
         }
 
+
+
         public async Task<User> Login(User user)
         {
             var userFromDb = await _applicationContext.Users.Where(u => u.Email == user.Email).FirstOrDefaultAsync();
@@ -102,6 +104,26 @@ namespace Sa.Repository
             var spChoices = choices.Select((c, i) => new StudentProfessorChoices() { StudentId = userId, ProfessorId = c, Factor = (byte)(i + 1) });
             _applicationContext.StudentProfessorChoices.AddRange(spChoices);
             _applicationContext.SaveChanges();
+        }
+
+        public async Task<ICollection<AssignedStudetnsDto>> GetAssignedStudents(int professorId)
+        {
+            //var assignedStudents = await _applicationContext.Students.Where(s => s.AssignedProfessor == professorId).ToListAsync();
+
+            return await (from u in _applicationContext.Users
+                          join s in _applicationContext.Students
+                          on u.Id equals s.UserId
+                          where s.AssignedProfessor == professorId
+                          orderby s.Points descending, s.StudyLevel descending
+                          select new AssignedStudetnsDto
+                          {
+                              StudentFirstName = u.FirstName,
+                              StudentLastName = u.LastName,
+                              CourseId = s.CourseId,
+                              AverageGrade = s.AverageGrade,
+                              StudyLevel = s.StudyLevel,
+                              Comment = s.Comment
+                          }).ToListAsync();
         }
     }
 }

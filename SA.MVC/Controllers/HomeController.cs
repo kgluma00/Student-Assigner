@@ -51,7 +51,10 @@ namespace SA.MVC.Controllers
             {
                 return View("~/Views/Students/Index.cshtml", _mapper.Map<User, UserHomeDto>(user));
             }
-
+            if (user.RoleId == (int)RoleEnum.Roles.Professor)
+            {
+                return View("~/Views/Professors/Index.cshtml", _mapper.Map<User, UserHomeDto>(user));
+            }
             return View("Index", _mapper.Map<User, UserHomeDto>(user));
 
         }
