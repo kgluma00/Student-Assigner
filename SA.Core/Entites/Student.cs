@@ -15,7 +15,7 @@ namespace SA.Core.Entites
         public double Points { get; set; }
         [Column(TypeName = "varchar(100)")]
         public string Comment { get; set; }
-        public int AssignedProfessor { get; set; }
+        public int? AssignedProfessor { get; set; }
         public byte StudyLevel { get; set; }
     }
 }
