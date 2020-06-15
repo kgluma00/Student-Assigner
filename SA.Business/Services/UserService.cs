@@ -41,5 +41,10 @@ namespace SA.Business.Services
             var cvChoices = choices.Select(int.Parse).ToArray();
             _saRepository.SaveStudentChoices(cvChoices, userId);
         }
+
+        public async Task<ICollection<AssignedStudetnsDto>> GetAssignedStudents(int professorId)
+        {
+            return await _saRepository.GetAssignedStudents(professorId);
+        }
     }
 }
