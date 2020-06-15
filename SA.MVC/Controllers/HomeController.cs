@@ -49,14 +49,25 @@ namespace SA.MVC.Controllers
 
             if (user.RoleId == (int)DbEnums.Roles.Student)
             {
-                return View("~/Views/Students/Index.cshtml", _mapper.Map<User, UserHomeDto>(user));
+                return View("~/Views/Students/Index.cshtml", _mapper.Map<User, StudentHomeDto>(user));
             }
             if (user.RoleId == (int)DbEnums.Roles.Professor)
             {
-                return View("~/Views/Professors/Index.cshtml", _mapper.Map<User, UserHomeDto>(user));
+                var assignedStudents = await _userService.GetAssignedStudents(user.Id);
+                return View("~/Views/Professors/Index.cshtml", assignedStudents);
             }
-            return View("Index", _mapper.Map<User, UserHomeDto>(user));
+            return View("Index", _mapper.Map<User, StudentHomeDto>(user));
+        }
 
+        [HttpGet]
+        public IActionResult Logout()
+        {
+            foreach (var cookie in Request.Cookies.Keys)
+            {
+                Response.Cookies.Delete(cookie);
+            }
+
+            return RedirectToAction("Login");
         }
     }
 }

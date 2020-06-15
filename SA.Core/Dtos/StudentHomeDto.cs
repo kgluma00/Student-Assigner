@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace SA.MVC.Models
 {
-    public class UserHomeDto
+    public class StudentHomeDto
     {
         public int Id { get; set; }
         public byte RoleId { get; set; }

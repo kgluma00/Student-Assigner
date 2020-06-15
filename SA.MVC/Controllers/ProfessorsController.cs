@@ -18,21 +18,14 @@ namespace SA.MVC.Controllers
             _mapper = mapper;
             _userService = userService;
         }
-        public IActionResult Index()
-        {
-            return View();
-        }
 
-        public async Task<IActionResult> ShowAssignedStudents()
+        [HttpGet]
+        public async Task<IActionResult> Index()
         {
             var claims = User.Claims.ToList();
             var assignedStudents = await _userService.GetAssignedStudents(int.Parse(claims[0].Value));
+
             return View(assignedStudents);
         }
-
-      
-        
-
-
     }
 }

@@ -13,7 +13,7 @@ namespace SA.MVC.Mappings
         public ClientMappingProfile()
         {
             CreateMap<LoginDto, User>().ReverseMap();
-            CreateMap<UserHomeDto, User>().ReverseMap();
+            CreateMap<StudentHomeDto, User>().ReverseMap();
         }
     }
 }

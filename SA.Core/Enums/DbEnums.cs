@@ -20,5 +20,11 @@ namespace SA.Core.Enums
             Brodogradnja = 3,
             Elektrotehnika = 4
         }
+
+        public enum StudyLevel
+        {
+            Završni = 1,
+            Diplomski = 2
+        }
     }
 }

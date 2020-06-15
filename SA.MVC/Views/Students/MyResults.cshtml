@@ -36,7 +36,6 @@
                         <dt class="col-sm-3 mb-2">Moj prosjek: </dt>
                         <dd class="col-sm-9 mb-2">@Math.Round(Model.StudentInfo.AverageGrade, 3)</dd>
 
-
                         <dt class="col-sm-3 mb-2">Ponavljanje godine: </dt>
                         <dd class="col-sm-9 mb-2">@Model.StudentInfo.NmbrOfRptYears</dd>
 
@@ -47,32 +46,14 @@
                         <dd class="col-sm-9 mb-2">@Model.StudentInfo.Comment</dd>
 
                         <dt class="col-sm-3 mb-2">Nivo studija: </dt>
-                        @if (Model.StudentInfo.StudyLevel == (int)SA.Core.Enums.DbEnums.Courses.Računarstvo)
+                        @if (Model.StudentInfo.StudyLevel == (int)SA.Core.Enums.DbEnums.StudyLevel.Završni)
                         {
-                            <dd class="col-sm-9 mb-2">Računarstvo</dd>
+                            <dd class="col-sm-9 mb-2">Završni rad</dd>
                         }
-                        @if (Model.StudentInfo.StudyLevel == (int)SA.Core.Enums.DbEnums.Courses.Strojarstvo)
+                        @if (Model.StudentInfo.StudyLevel == (int)SA.Core.Enums.DbEnums.StudyLevel.Diplomski)
                         {
-                            <dd class="col-sm-9 mb-2">Strojarstvo</dd>
+                            <dd class="col-sm-9 mb-2">Diplomski rad</dd>
                         }
-                        @if (Model.StudentInfo.StudyLevel == (int)SA.Core.Enums.DbEnums.Courses.Brodogradnja)
-                        {
-                            <dd class="col-sm-9 mb-2">Brodogradnja</dd>
-                        }
-                        @if (Model.StudentInfo.StudyLevel == (int)SA.Core.Enums.DbEnums.Courses.Elektrotehnika)
-                        {
-                            <dd class="col-sm-9 mb-2">Elektrotehnika</dd>
-                        }
-
-
-
-                        @*<dt class="col-sm-3">Nesting</dt>
-                            <dd class="col-sm-9">
-                                <dl class="row">
-                                    <dt class="col-sm-4">Nested definition list</dt>
-                                    <dd class="col-sm-8">Aenean posuere, tortor sed cursus feugiat, nunc augue blandit nunc.</dd>
-                                </dl>
-                            </dd>*@
                     </dl>
                     <div class="card border-info mt-5">
                         <div class="card-header">Informacija</div>

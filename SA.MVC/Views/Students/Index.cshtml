@@ -1,15 +1,11 @@
 ﻿@using SA.Core.Enums;
 
-@model UserHomeDto
+@model StudentHomeDto
 @{
     ViewData["Title"] = "Home Page";
     if (Model.RoleId == (int)DbEnums.Roles.Student)
     {
         Layout = "_Layout";
-    }
-    else if (Model.RoleId == (int)DbEnums.Roles.Professor)
-    {
-        Layout = "_LayoutProfessor";
     }
 }
 

@@ -21,12 +21,15 @@ namespace SA.MVC.Controllers
             _userService = userService;
         }
 
+        [HttpGet]
         public IActionResult Index()
         {
-            var userHomeDto = new UserHomeDto();
+            var userHomeDto = new StudentHomeDto();
+
             var claims = User.Claims.ToList();
             userHomeDto.RoleId = byte.Parse(claims[2].Value);
             userHomeDto.Id = int.Parse(claims[0].Value);
+
             return View(userHomeDto);
         }
 
