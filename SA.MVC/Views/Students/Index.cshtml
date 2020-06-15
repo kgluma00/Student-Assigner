@@ -184,11 +184,16 @@
                     Swal.fire(
                         'Uspješno spremljeno!',
                         'Vaš odabir je spremljen, Vaš rezultat biti će objavljen uskoro!',
-                        'success'
+                        'success',
                     )
                 },
                 error: function (err) {
-                    alert("Error! " + err.status);
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Greška...',
+                        text: 'Pogrešan broj mentora.',
+                        footer: '<small>Broj mentora po studijima: Računarstvo-5, strojarstvo-5, brodogradnja-1, elektrotehnika-2.</small>'
+                    })
                 }
             });
         }

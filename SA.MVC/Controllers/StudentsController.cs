@@ -44,6 +44,7 @@ namespace SA.MVC.Controllers
         [HttpPost]
         public ActionResult SaveStudentsChoices(string[] choices)
         {
+            if (choices.Length == 0) return NotFound();
             //var userId = User.Claims.ToList();
             //_userService.SaveStudentChoices(choices, int.Parse(userId[0].Value));
 
