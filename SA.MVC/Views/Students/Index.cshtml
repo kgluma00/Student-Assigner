@@ -11,7 +11,7 @@
 
 <div class="text-center">
     <h1 class="display-4">Dobrodošli</h1>
-    <p>Molimo vas odaberite željene mentore.</p>
+    <p>Molimo vas odaberite <strong class="text-info">željene</strong> mentore.</p>
 </div>
 
 <div class="container">
@@ -44,7 +44,7 @@
         </div>
     </div>
     <div class="row justify-content-around mt-5">
-        <a class="btn btn-success p-3 w-25" href="#" onclick="SaveRecords()">Spremi odabir</a>
+        <a class="btn btn-info p-3 w-25" href="#" onclick="SaveRecords()">Spremi odabir</a>
     </div>
 </div>
 
@@ -76,7 +76,7 @@
                             liElement.id = val.id;
                             var aElement = document.createElement("a");
                             aElement.textContent = val.firstName + ' ' + val.lastName;
-                            aElement.className = "btn btn-success professor";
+                            aElement.className = "btn btn-dark professor";
                             aElement.href = "#";
                             liElement.appendChild(aElement);
                             liElement.appendChild(footer);
@@ -123,7 +123,7 @@
                 var aElement = document.createElement("a");
 
                 aElement.textContent = e.target.innerText;
-                aElement.className = "btn btn-danger professor";
+                aElement.className = "btn btn-secondary professor";
                 aElement.href = "#";
 
                 liElement.appendChild(aElement);
@@ -150,7 +150,7 @@
 
                 var aElement = document.createElement("a");
                 aElement.textContent = e.target.innerText;
-                aElement.className = "btn btn-success professor";
+                aElement.className = "btn btn-dark professor";
                 aElement.href = "#";
 
                 document.getElementById(e.path[1].id).remove();
@@ -168,8 +168,6 @@
             var getElements = document.querySelectorAll('#odabir');
             var records = getElements[0].childNodes;
             var i;
-
-            console.log(model);
 
             //if (records.length != 5) return false;
             var professorIds = [];
