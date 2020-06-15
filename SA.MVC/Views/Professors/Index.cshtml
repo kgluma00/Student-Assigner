@@ -3,11 +3,11 @@
 @model UserHomeDto
 @{
     ViewData["Title"] = "Home Page";
-    if (Model.RoleId == (int)RoleEnum.Roles.Student)
+    if (Model.RoleId == (int)DbEnums.Roles.Student)
     {
         Layout = "_Layout";
     }
-    else if (Model.RoleId == (int)RoleEnum.Roles.Professor)
+    else if (Model.RoleId == (int)DbEnums.Roles.Professor)
     {
         Layout = "_LayoutProfessor";
     }
