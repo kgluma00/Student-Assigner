@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.VisualBasic;
 using SA.Business.Interfaces;
 using SA.Core.Dtos;
 using SA.MVC.Models;
@@ -44,6 +45,15 @@ namespace SA.MVC.Controllers
             //_userService.SaveStudentChoices(choices, int.Parse(userId[0].Value));
 
             return Ok();
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> MyResults()
+        {
+            var claims = User.Claims.ToList();
+            var myResultDto = await _userService.MyResults(int.Parse(claims[0].Value));
+
+            return View(myResultDto);
         }
     }
 }

@@ -3,6 +3,7 @@ using SA.Business.Interfaces;
 using SA.Core.Dtos;
 using SA.Core.Entites;
 using SA.Core.Interfaces;
+using SA.MVC.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -34,6 +35,11 @@ namespace SA.Business.Services
         public async Task<User> Login(User user)
         {
             return await _saRepository.Login(user);
+        }
+
+        public async Task<MyResultDto> MyResults(int userId)
+        {
+            return await _saRepository.MyResults(userId);
         }
 
         public void SaveStudentChoices(string[] choices, int userId)

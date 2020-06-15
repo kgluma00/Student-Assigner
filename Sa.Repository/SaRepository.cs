@@ -2,6 +2,7 @@
 using SA.Core.Dtos;
 using SA.Core.Entites;
 using SA.Core.Interfaces;
+using SA.MVC.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -59,6 +60,41 @@ namespace Sa.Repository
         {
             var userFromDb = await _applicationContext.Users.Where(u => u.Email == user.Email).FirstOrDefaultAsync();
             return userFromDb;
+        }
+
+        public async Task<MyResultDto> MyResults(int userId)
+        {
+            var studentInfo = await (from s in _applicationContext.Students
+                                     join c in _applicationContext.Courses
+                                     on s.CourseId equals c.Id
+                                     where s.UserId == userId
+                                     select new StudentInfoDto
+                                     {
+                                         UserId = userId,
+                                         AverageGrade = s.AverageGrade,
+                                         CourseName = c.CourseName,
+                                         NmbrOfRptYears = s.NmbrOfRptYears,
+                                         Comment = s.Comment,
+                                         StudyLevel = s.StudyLevel,
+                                         AssignedProfessor = s.AssignedProfessor.Value
+                                     }).FirstOrDefaultAsync();
+
+            var professorInfo = await (from u in _applicationContext.Users
+                                       join p in _applicationContext.Professors
+                                       on u.Id equals p.UserId
+                                       where u.Id == studentInfo.AssignedProfessor
+                                       select new ProfessorInfoDto
+                                       {
+                                           UserId = studentInfo.AssignedProfessor,
+                                           FirstName = u.FirstName,
+                                           LastName = u.LastName,
+                                           AreaOfInterestOne = p.AreaOfInterestOne,
+                                           AreaOfInterestTwo = p.AreaOfInterestTwo,
+                                           AreaOfInterestThree = p.AreaOfInterestThree,
+                                           Email = u.Email
+                                       }).FirstOrDefaultAsync();
+
+            return new MyResultDto { ProfessorInfo = professorInfo, StudentInfo = studentInfo };
         }
 
         public void SaveStudentChoices(int[] choices, int userId)

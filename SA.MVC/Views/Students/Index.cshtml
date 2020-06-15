@@ -3,11 +3,11 @@
 @model UserHomeDto
 @{
     ViewData["Title"] = "Home Page";
-    if (Model.RoleId == (int)RoleEnum.Roles.Student)
+    if (Model.RoleId == (int)DbEnums.Roles.Student)
     {
         Layout = "_Layout";
     }
-    else if (Model.RoleId == (int)RoleEnum.Roles.Professor)
+    else if (Model.RoleId == (int)DbEnums.Roles.Professor)
     {
         Layout = "_LayoutProfessor";
     }
@@ -21,7 +21,7 @@
 <div class="container">
     <div class="row justify-content-between">
         <div class="col-md">
-            <div class="card card-height" ">
+            <div class="card card border-0 shadow card-height" ">
                 <div class="card-body overflow-auto">
                     <h5 class="card-title">Ponuđeni mentori</h5>
                     <p class="card-text">Molimo vas odaberi točno <strong>pet</strong> mentora.</p>
@@ -34,7 +34,7 @@
             </div>
         </div>
         <div class="col-md">
-            <div class="card card-height">
+            <div class="card border-0 shadow card-height">
                 <div class="card-body overflow-auto">
                     <h5 class="card-title">Odabrani mentori</h5>
                     <p class="card-text">Provjerite izbor, kasnije izmjene <strong>neće</strong> biti moguće.</p>
@@ -48,7 +48,7 @@
         </div>
     </div>
     <div class="row justify-content-around mt-5">
-        <a class="btn btn-info" href="#" onclick="SaveRecords()">Spremi odabir</a>
+        <a class="btn btn-success p-3 w-25" href="#" onclick="SaveRecords()">Spremi odabir</a>
     </div>
 </div>
 
@@ -173,6 +173,8 @@
             var records = getElements[0].childNodes;
             var i;
 
+            console.log(model);
+
             //if (records.length != 5) return false;
             var professorIds = [];
 
@@ -185,7 +187,11 @@
                 type: "POST",
                 data: { "choices": professorIds },
                 success: function (resp) {
-                    console.log(resp);
+                    Swal.fire(
+                        'Uspješno spremljeno!',
+                        'Vaš odabir je spremljen, Vaš rezultat biti će objavljen uskoro!',
+                        'success'
+                    )
                 },
                 error: function (err) {
                     alert("Error! " + err.status);

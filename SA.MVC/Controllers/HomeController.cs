@@ -25,13 +25,6 @@ namespace SA.MVC.Controllers
             _userService = userService;
         }
 
-        // GET: HomeController
-        public ActionResult Index()
-        {
-            return View();
-        }
-
-
         [HttpGet]
         public ActionResult Login()
         {
@@ -54,7 +47,7 @@ namespace SA.MVC.Controllers
             var userPrincipal = new ClaimsPrincipal(new[] { userIdentity });
             await HttpContext.SignInAsync(userPrincipal);
 
-            if (user.RoleId == (int)RoleEnum.Roles.Student)
+            if (user.RoleId == (int)DbEnums.Roles.Student)
             {
                 return View("~/Views/Students/Index.cshtml", _mapper.Map<User, UserHomeDto>(user));
             }

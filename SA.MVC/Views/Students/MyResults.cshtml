@@ -1,0 +1,127 @@
+﻿@model SA.MVC.Models.MyResultDto
+
+@{
+    ViewData["Title"] = "MyResults";
+    Layout = "_Layout";
+}
+
+
+<div class="container">
+    <div class="row justify-content-between">
+        <div class="col-md-8">
+            <div class="card border-0 shadow" style="height:64vh;">
+                <div class="card-body overflow-auto">
+                    <h5 class="card-title">Moji podaci</h5>
+                    <p class="card-text">U slučaju da su podaci <strong>pogrešni</strong>, prijavite grešku.</p>
+                    <hr />
+                    <dl class="row">
+                        <dt class="col-sm-3 mb-2">Moj smjer: </dt>
+                        @if (Model.StudentInfo.StudyLevel == (int)SA.Core.Enums.DbEnums.Courses.Računarstvo)
+                        {
+                            <dd class="col-sm-9 mb-2">Računarstvo</dd>
+                        }
+                        @if (Model.StudentInfo.StudyLevel == (int)SA.Core.Enums.DbEnums.Courses.Strojarstvo)
+                        {
+                            <dd class="col-sm-9 mb-2">Strojarstvo</dd>
+                        }
+                        @if (Model.StudentInfo.StudyLevel == (int)SA.Core.Enums.DbEnums.Courses.Brodogradnja)
+                        {
+                            <dd class="col-sm-9 mb-2">Brodogradnja</dd>
+                        }
+                        @if (Model.StudentInfo.StudyLevel == (int)SA.Core.Enums.DbEnums.Courses.Elektrotehnika)
+                        {
+                            <dd class="col-sm-9 mb-2">Elektrotehnika</dd>
+                        }
+
+                        <dt class="col-sm-3 mb-2">Moj prosjek: </dt>
+                        <dd class="col-sm-9 mb-2">@Math.Round(Model.StudentInfo.AverageGrade, 3)</dd>
+
+
+                        <dt class="col-sm-3 mb-2">Ponavljanje godine: </dt>
+                        <dd class="col-sm-9 mb-2">@Model.StudentInfo.NmbrOfRptYears</dd>
+
+                        <dt class="col-sm-3 mb-2">Moji bodovi: </dt>
+                        <dd class="col-sm-9 mb-2">@Model.StudentInfo.Points</dd>
+
+                        <dt class="col-sm-3 mb-2">Moj komentar: </dt>
+                        <dd class="col-sm-9 mb-2">@Model.StudentInfo.Comment</dd>
+
+                        <dt class="col-sm-3 mb-2">Nivo studija: </dt>
+                        @if (Model.StudentInfo.StudyLevel == (int)SA.Core.Enums.DbEnums.Courses.Računarstvo)
+                        {
+                            <dd class="col-sm-9 mb-2">Računarstvo</dd>
+                        }
+                        @if (Model.StudentInfo.StudyLevel == (int)SA.Core.Enums.DbEnums.Courses.Strojarstvo)
+                        {
+                            <dd class="col-sm-9 mb-2">Strojarstvo</dd>
+                        }
+                        @if (Model.StudentInfo.StudyLevel == (int)SA.Core.Enums.DbEnums.Courses.Brodogradnja)
+                        {
+                            <dd class="col-sm-9 mb-2">Brodogradnja</dd>
+                        }
+                        @if (Model.StudentInfo.StudyLevel == (int)SA.Core.Enums.DbEnums.Courses.Elektrotehnika)
+                        {
+                            <dd class="col-sm-9 mb-2">Elektrotehnika</dd>
+                        }
+
+
+
+                        @*<dt class="col-sm-3">Nesting</dt>
+                            <dd class="col-sm-9">
+                                <dl class="row">
+                                    <dt class="col-sm-4">Nested definition list</dt>
+                                    <dd class="col-sm-8">Aenean posuere, tortor sed cursus feugiat, nunc augue blandit nunc.</dd>
+                                </dl>
+                            </dd>*@
+                    </dl>
+                    <div class="card border-info mt-5">
+                        <div class="card-header">Informacija</div>
+                        <div class="card-body text-info">
+                            <h5 class="card-title">Način računanja bodova</h5>
+                            <p class="card-text">
+                                Izračun bodova određuje se prema idućoj formuli: <strong class="text-danger">BrojGodinaStudiranja * Prosjek</strong> gdje se
+                                BrojGodinaStudiranja množi sa 1 ukoliko student nije produljio akademsku godinu, potom 0.8 za jednu produljenu godinu,
+                                0.6 za dvije produljenje godine te 0.4 za tri produljenje godine.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md">
+            <div class="card card border-0 shadow" style="height:64vh;">
+                <div class="card-body overflow-auto">
+                    <h5 class="card-title">Dodijeljeni mentor</h5>
+                    <p class="card-text">Ispod se nalaze <strong>općenite</strong> informacije o dodijeljenom mentoru.</p>
+                    <hr />
+                    <dl class="row">
+                        <dt class="col-sm-4 mb-1">Ime: </dt>
+                        <dd class="col-sm-8 mb-1">@Model.ProfessorInfo.FirstName</dd>
+
+                        <dt class="col-sm-4 mb-1">Prezime: </dt>
+                        <dd class="col-sm-8 mb-1">@Model.ProfessorInfo.LastName</dd>
+
+                        <dt class="col-sm-4 mb-1">Email: </dt>
+                        <dd class="col-sm-8 mb-">@Model.ProfessorInfo.Email</dd>
+
+                        <dt class="col-sm-4 mb-1">Tag 1: </dt>
+                        <dd class="col-sm-8 mb-">@Model.ProfessorInfo.AreaOfInterestOne</dd>
+
+                        <dt class="col-sm-4 mb-1">Tag 2: </dt>
+                        <dd class="col-sm-8 mb-">@Model.ProfessorInfo.AreaOfInterestTwo</dd>
+
+                        <dt class="col-sm-4 mb-1">Tag 3: </dt>
+                        <dd class="col-sm-8 mb-">@Model.ProfessorInfo.AreaOfInterestThree</dd>
+                    </dl>
+                    <div class="row" style="height:10vh">
+                    </div>
+                    <div class="row justify-content-center">
+                        <a class="btn btn-primary p-3 w-75 mb-2" href="mailto:@Model.ProfessorInfo.Email">Pošalji poruku mentoru</a>
+                        <a class="btn btn-danger p-3 w-75" href="#">Prijavi grešku</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
