@@ -125,5 +125,32 @@ namespace Sa.Repository
                               Comment = s.Comment
                           }).ToListAsync();
         }
+
+        public async Task<List<Course>> GetAllCourses()
+        {
+            return await _applicationContext.Courses.ToListAsync();
+        }
+
+        public async Task<List<UserDto>> GetAllStudentsByCoursesId(byte courseId)
+        {
+            var userFromDb = await (from s in _applicationContext.Students
+                                    join u in _applicationContext.Users
+                                    on s.UserId equals u.Id
+                                    where s.CourseId == courseId
+                                    select new UserDto
+                                    {
+                                        FirstName = u.FirstName,
+                                        LastName = u.LastName,
+                                        StudentId = s.Id,
+                                        Id = u.Id
+                                    }).ToListAsync();
+
+            return userFromDb;
+        }
+
+        public Task<List<User>> GetAllProfessorChoicesByStudentId(int studentId)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

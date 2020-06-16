@@ -14,5 +14,6 @@ namespace SA.Core.Dtos
         public string CountryOfBirth { get; set; }
         public string Email { get; set; }
         public byte RoleId { get; set; }
+        public int? StudentId { get; set; }
     }
 }

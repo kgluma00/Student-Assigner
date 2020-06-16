@@ -90,3 +90,8 @@ body {
      background-color: #2197dc !important;
      border-color: #41aeee !important;
  }
+
+.dropdown-menu {
+    max-height: 50vh;
+    overflow-y: auto;
+}

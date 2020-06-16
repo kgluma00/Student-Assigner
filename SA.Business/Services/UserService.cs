@@ -52,5 +52,21 @@ namespace SA.Business.Services
         {
             return await _saRepository.GetAssignedStudents(professorId);
         }
+
+        public async Task<List<CoursesDto>> GetAllCourses()
+        {
+            var coursesFromDb = await _saRepository.GetAllCourses();
+            return _mapper.Map<List<Course>, List<CoursesDto>>(coursesFromDb);
+        }
+
+        public async Task<List<UserDto>> GetAllStudentsByCoursesId(byte courseId)
+        {
+            return await _saRepository.GetAllStudentsByCoursesId(courseId);
+        }
+
+        public Task<List<UserDto>> GetAllProfessorChoicesByStudentId(int studentId)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

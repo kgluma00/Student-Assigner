@@ -49,14 +49,17 @@ namespace SA.MVC.Controllers
 
             if (user.RoleId == (int)DbEnums.Roles.Student)
             {
-                return View("~/Views/Students/Index.cshtml", _mapper.Map<User, StudentHomeDto>(user));
+                return RedirectToAction("Index", "Students");
             }
-            if (user.RoleId == (int)DbEnums.Roles.Professor)
+            else if (user.RoleId == (int)DbEnums.Roles.Professor)
             {
-                var assignedStudents = await _userService.GetAssignedStudents(user.Id);
-                return View("~/Views/Professors/Index.cshtml", assignedStudents);
+                return RedirectToAction("Index", "Professors");
+
             }
-            return View("Index", _mapper.Map<User, StudentHomeDto>(user));
+            else
+            {
+                return RedirectToAction("Index", "Admins");
+            }
         }
 
         [HttpGet]
