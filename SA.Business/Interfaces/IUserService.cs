@@ -15,6 +15,6 @@ namespace SA.Business.Interfaces
         Task<MyResultDto> MyResults(int userId);
         Task<List<CoursesDto>> GetAllCourses();
         Task<List<UserDto>> GetAllStudentsByCoursesId(byte courseId);
-        Task<List<UserDto>> GetAllProfessorChoicesByStudentId(int studentId);
+        Task<StudentProfessorDto> GetAllStudentProfessorDetails(int studentId);
     }
 }

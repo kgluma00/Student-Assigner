@@ -42,5 +42,11 @@ namespace SA.MVC.Controllers
         {
             return await _userService.GetAllStudentsByCoursesId(byte.Parse(courseId));
         }
+
+        [HttpGet]
+        public async Task<StudentProfessorDto> GetAllStudentProfessorDetails(string userId)
+        {
+            return await _userService.GetAllStudentProfessorDetails(int.Parse(userId));
+        }
     }
 }

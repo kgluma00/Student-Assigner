@@ -17,6 +17,6 @@ namespace SA.Core.Interfaces
         Task<MyResultDto> MyResults(int userId);
         Task<List<Course>> GetAllCourses();
         Task<List<UserDto>> GetAllStudentsByCoursesId(byte courseId);
-        Task<List<User>> GetAllProfessorChoicesByStudentId(int studentId);
+        Task<StudentProfessorDto> GetAllStudentProfessorDetails(int userId);
     }
 }

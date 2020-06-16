@@ -64,9 +64,9 @@ namespace SA.Business.Services
             return await _saRepository.GetAllStudentsByCoursesId(courseId);
         }
 
-        public Task<List<UserDto>> GetAllProfessorChoicesByStudentId(int studentId)
+        public async Task<StudentProfessorDto> GetAllStudentProfessorDetails(int studentId)
         {
-            throw new NotImplementedException();
+            return await _saRepository.GetAllStudentProfessorDetails(studentId);
         }
     }
 }

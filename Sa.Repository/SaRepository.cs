@@ -56,8 +56,6 @@ namespace Sa.Repository
             return userFromDb;
         }
 
-
-
         public async Task<User> Login(User user)
         {
             var userFromDb = await _applicationContext.Users.Where(u => u.Email == user.Email).FirstOrDefaultAsync();
@@ -148,9 +146,67 @@ namespace Sa.Repository
             return userFromDb;
         }
 
-        public Task<List<User>> GetAllProfessorChoicesByStudentId(int studentId)
+        public async Task<StudentProfessorDto> GetAllStudentProfessorDetails(int userId)
         {
-            throw new NotImplementedException();
+            var studentUserDto = await (from spc in _applicationContext.StudentProfessorChoices
+                                        join s in _applicationContext.Students
+                                        on spc.StudentId equals s.UserId
+                                        join u in _applicationContext.Users
+                                        on s.UserId equals u.Id
+                                        where spc.StudentId == userId
+                                        select new StudentUserDto
+                                        {
+                                            UserId = userId,
+                                            FirstName = u.FirstName,
+                                            LastName = u.LastName,
+                                            Email = u.Email,
+                                            CountryOfBirth = u.CountryOfBirth,
+                                            AverageGrade = s.AverageGrade,
+                                            StudyLevel = s.StudyLevel,
+                                            Comment = s.Comment,
+                                            Points = s.Points,
+                                            NmbrOfRptYears = s.NmbrOfRptYears
+                                        }).Distinct().FirstAsync();
+
+            var professorBasicInfoDto = await (from spc in _applicationContext.StudentProfessorChoices
+                                          join p in _applicationContext.Professors
+                                          on spc.ProfessorId equals p.UserId
+                                          join u in _applicationContext.Users
+                                          on p.UserId equals u.Id
+                                          where spc.StudentId == userId
+                                          select new ProfessorBasicInfoDto
+                                          {
+                                              Id = userId,
+                                              FirstName = u.FirstName,
+                                              LastName = u.LastName,
+                                              Email = u.Email,
+                                              AreaOfInterestOne = p.AreaOfInterestOne,
+                                              AreaOfInterestTwo = p.AreaOfInterestTwo,
+                                              AreaOfInterestThree = p.AreaOfInterestThree
+                                          }).ToListAsync();
+
+            var assignedProfessorBasicInfoDto = await (from s in _applicationContext.Students
+                                                       join p in _applicationContext.Professors
+                                                       on s.AssignedProfessor equals p.UserId
+                                                       join u in _applicationContext.Users
+                                                       on p.UserId equals u.Id
+                                                       where s.UserId == userId
+                                                       select new ProfessorBasicInfoDto
+                                                       {
+                                                           Id = userId,
+                                                           FirstName = u.FirstName,
+                                                           LastName = u.LastName,
+                                                           Email = u.Email,
+                                                           AreaOfInterestOne = p.AreaOfInterestOne,
+                                                           AreaOfInterestTwo = p.AreaOfInterestTwo,
+                                                           AreaOfInterestThree = p.AreaOfInterestThree
+                                                       }).FirstOrDefaultAsync();
+
+            return new StudentProfessorDto 
+            {   StudentUserDto = studentUserDto, 
+                ProfessorBasicInfoDto = professorBasicInfoDto, 
+                AssignedProfessorBasicInfoDto = assignedProfessorBasicInfoDto 
+            };
         }
     }
 }
