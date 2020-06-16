@@ -76,16 +76,6 @@ body {
 }
 
 /*krisitjan CSS*/
-table, td {
-    background-color: azure;
-    border: double;
-}
-
-#dvright, #dvleft {
-    background-color: azure;
-    height: 300px;
-    width: 400px;
-}
 
 .card-height {
     height: 55vh;
