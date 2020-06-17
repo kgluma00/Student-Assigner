@@ -4,39 +4,96 @@
 
 }
 
-<div class="btn-group">
-    <button type="button" id="courseButton" class="btn btn-info">Odaberi studij</button>
-    <button type="button" class="btn btn-info dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-        <span class="sr-only">Toggle Dropdown</span>
-    </button>
-    <div class="dropdown-menu" id="courses">
+<div class="row justify-content-center my-5">
+    <div class="card w-100">
+        <div class="card-body d-inline-flex">
+            <div class="col">
+                <div class="dropdown">
+                    <button class="btn btn-primary dropdown-toggle w-100" id="courseButton" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Odaberi studij
+                    </button>
+                    <div class="dropdown-menu w-100" id="courses" aria-labelledby="dropdownMenuButton">
+                    </div>
+                </div>
+            </div>
+            <div class="col">
+                <div class="dropdown">
+                    <button class="btn btn-primary dropdown-toggle w-100" id="studentButton" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Odaberi studenta
+                    </button>
+                    <div class="dropdown-menu w-100" id="students" aria-labelledby="dropdownMenuButton">
+                    </div>
+                </div>
+            </div>
+            <div class="col">
+                <button type="submit" class="btn btn-warning  w-100" id="resetButton">Resetiraj</button>
+            </div>
+        </div>
     </div>
 </div>
 
-<div class="btn-group">
-    <button type="button" id="studentButton" class="btn btn-info">Odaberi studenta</button>
-    <button type="button" class="btn btn-info dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-        <span class="sr-only">Toggle Dropdown</span>
-    </button>
-    <div class="dropdown-menu" id="students">
+<div class="row justify-content-between mb-5">
+    <div class="col-md-4">
+        <div class="card border-0 shadow">
+            <div class="card-body overflow-auto">
+                <h5 class="card-title">Student</h5>
+                <p class="card-text">Ispod se nalaze svi podaci o <strong>odabranom</strong> studentu.</p>
+                <hr />
+                <div class="row">
+                    <ul class="list-group w-100" id="studentInfo">
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card card border-0 shadow">
+            <div class="card-body overflow-auto">
+                <h5 class="card-title">Profesori</h5>
+                <p class="card-text">Popis svih <strong>profesora</strong> za odabranog studenta.</p>
+                <hr />
+                <div class="row">
+                    <ul class="list-group w-100" id="chosenProfessors">
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="card card border-0 shadow">
+            <div class="card-body overflow-auto">
+                <h5 class="card-title">Dodijeljeni mentor</h5>
+                <p class="card-text">Sve informacije o dodijeljenom mentoru ukoliko mu je <strong>dodijeljen</strong> jedan.</p>
+                <hr />
+                <div class="row">
+                    <ul class="list-group w-100" id="assignedProfessor">
+                    </ul>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 
-<button type="submit" id="resetButton">Resetiraj</button>
+
+
 
 @section Scripts {
     <script>
 
         var courseDropDown = [];
         var studentsDropDown = [];
+        var liElementStudents = [];
+        var liElementsProfessors = [];
+        var footerLiElementsProfessors = [];
+        var liElementsAssignedProfessor = [];
 
 
         $(document).ready(function () {
 
             loadCourses();
 
-            function loadCourses()
-            {
+            function loadCourses() {
                 $.ajax({
                     url: '@Url.Action("GetAllCourses", "Admins")',
                     type: "GET",
@@ -57,28 +114,36 @@
                 });
             }
 
-            $("#resetButton").click(function() {
+            $("#resetButton").click(function () {
                 $("#students").empty();
                 courseDropDown = [];
                 studentsDropDown = [];
+                liElementStudents = [];
+                liElementsProfessors = [];
+                footerLiElementsProfessors = [];
+                liElementsAssignedProfessor = [];
+
                 $("#studentButton").text("Odaberi studenta");
                 $("#courseButton").text("Odaberi studij");
-
+                $("#studentInfo").html(liElementStudents);
+                $("#chosenProfessors").html(liElementsProfessors);
+                $("#assignedProfessor").html(liElementsAssignedProfessor);
+                $(".card.border-0").css("height", "");
 
                 loadCourses();
 
             });
 
-        $(".dropdown-menu#courses").click(function (event) {
-            var text = event.target.innerText
-            $("#courseButton").text(text);
+            $(".dropdown-menu#courses").click(function (event) {
+                var text = event.target.innerText
+                $("#courseButton").text(text);
 
-            $.ajax({
-                url: '@Url.Action("GetAllStudentsByCoursesId", "Admins")',
-                type: "GET",
-                data: { courseId: event.target.id },
+                $.ajax({
+                    url: '@Url.Action("GetAllStudentsByCoursesId", "Admins")',
+                    type: "GET",
+                    data: { courseId: event.target.id },
                     success: function (result) {
-                    $.each(result, function (idx, val) {
+                        $.each(result, function (idx, val) {
                             var aElement = document.createElement("a");
                             aElement.textContent = val.firstName + ' ' + val.lastName;
                             aElement.className = "dropdown-item";
@@ -91,27 +156,89 @@
                     error: function () {
                         alert("Something went wrong call the police");
                     }
-                  });
-        });
+                });
+            });
 
             $(".dropdown-menu#students").click(function (event) {
                 var text = event.target.innerText
                 $("#studentButton").text(text);
-                console.log(event.target.id);
 
-                      $.ajax({
-                        url: '@Url.Action("GetAllStudentProfessorDetails", "Admins")',
-                        type: "GET",
-                        data: { userId: event.target.id },
-                            success: function (result) {
-                                console.log(result);
-                            },
-                            error: function () {
-                                alert("Something went wrong call the police");
-                            }
-                          });
-
+                $.ajax({
+                    url: '@Url.Action("GetAllStudentProfessorDetails", "Admins")',
+                    type: "GET",
+                    data: { userId: event.target.id },
+                    success: function (result) {
+                        $(".card.border-0").css("height","62vh");
+                        createStudent(result.studentUserDto);
+                        createProfessorList(result.professorBasicInfoDto);
+                        createAssignedProfessor(result.assignedProfessorBasicInfoDto);
+                    },
+                    error: function () {
+                        alert("Something went wrong call the police");
+                    }
+                });
             });
+
+
+            function createStudent(student) {
+
+                var tipStudija = "Diplomski";
+                //firstName, lastName, email, CountryOfbirth, AvgGrade, points, nmbrOfRptYears, studyLevel, comment
+                for (var i = 0; i < 9; i++) {
+                    liElementStudents[i] = document.createElement("li");
+                    liElementStudents[i].className = "list-group-item border-0";
+                }
+
+                if (student.countryOfBirth == 1) {
+                    tipStudija = 'Završni';
+                }
+
+                liElementStudents[0].innerHTML = "<strong>Ime: </strong>" + ' ' + student.firstName;
+                liElementStudents[1].innerHTML = "<strong>Prezime: </strong>" + ' ' + student.lastName;
+                liElementStudents[2].innerHTML = "<strong>Email: </strong>" + ' ' + student.email;
+                liElementStudents[3].innerHTML = "<strong>Država: </strong>" + ' ' + student.countryOfBirth;
+                liElementStudents[4].innerHTML = "<strong>Prosjek: </strong>" + ' ' + student.averageGrade.toPrecision(5);
+                liElementStudents[5].innerHTML = "<strong>Bodovi: </strong>" + ' ' + student.points;
+                liElementStudents[6].innerHTML = "<strong>Broj ponavljanjih godina: </strong>" + ' ' + student.nmbrOfRptYears;
+                liElementStudents[7].innerHTML = "<strong>Tip studija: </strong>" + ' ' + tipStudija;
+                liElementStudents[8].innerHTML = "<strong>Koment: </strong>" + ' ' + student.comment;
+
+                $("#studentInfo").html(liElementStudents);
+            }
+
+            function createProfessorList(professors) {
+                for (var i = 0; i < 5; i++) {
+                    liElementsProfessors[i] = document.createElement("li");
+                    liElementsProfessors[i].className = "list-group-item border-0";
+                    footerLiElementsProfessors[i] = document.createElement("footer")
+                    footerLiElementsProfessors[i].className = "blockquote-footer";
+                }
+
+                for (var i = 0; i < 5; i++) {
+                    liElementsProfessors[i].innerHTML = '<strong>' + (i + 1) + '.</strong>' + ' ' + professors[i].firstName + ' ' + professors[i].lastName;
+                    footerLiElementsProfessors[i].textContent = professors[i].areaOfInterestOne + ', ' + professors[i].areaOfInterestTwo + ', ' + professors[i].areaOfInterestThree;
+                    liElementsProfessors[i].appendChild(footerLiElementsProfessors[i]);
+                }
+                $("#chosenProfessors").html(liElementsProfessors);
+            }
+
+            function createAssignedProfessor(professor) {
+
+                //firstName, lastName, email, AreaOfIntOne, AreaOfIntTwo, AreaOfIntThree
+                for (var i = 0; i < 6; i++) {
+                    liElementsAssignedProfessor[i] = document.createElement("li");
+                    liElementsAssignedProfessor[i].className = "list-group-item border-0";
+                }
+
+                liElementsAssignedProfessor[0].innerHTML = "<strong>Ime: </strong>" + ' ' + professor.firstName;
+                liElementsAssignedProfessor[1].innerHTML = "<strong>Prezime: </strong>" + ' ' + professor.lastName;
+                liElementsAssignedProfessor[2].innerHTML = "<strong>Email: </strong>" + ' ' + professor.email;
+                liElementsAssignedProfessor[3].innerHTML = "<strong>Tag 1: </strong>" + ' ' + professor.areaOfInterestOne;
+                liElementsAssignedProfessor[4].innerHTML = "<strong>Tag 2: </strong>" + ' ' + professor.areaOfInterestTwo;
+                liElementsAssignedProfessor[5].innerHTML = "<strong>Tag 3: </strong>" + ' ' + professor.areaOfInterestThree;
+
+                $("#assignedProfessor").html(liElementsAssignedProfessor);
+            }
 
 
         });

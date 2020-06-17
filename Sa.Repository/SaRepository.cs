@@ -166,7 +166,7 @@ namespace Sa.Repository
                                             Comment = s.Comment,
                                             Points = s.Points,
                                             NmbrOfRptYears = s.NmbrOfRptYears
-                                        }).Distinct().FirstAsync();
+                                        }).Distinct().FirstOrDefaultAsync();
 
             var professorBasicInfoDto = await (from spc in _applicationContext.StudentProfessorChoices
                                           join p in _applicationContext.Professors
@@ -176,7 +176,7 @@ namespace Sa.Repository
                                           where spc.StudentId == userId
                                           select new ProfessorBasicInfoDto
                                           {
-                                              Id = userId,
+                                              Id = spc.ProfessorId,
                                               FirstName = u.FirstName,
                                               LastName = u.LastName,
                                               Email = u.Email,
@@ -193,7 +193,7 @@ namespace Sa.Repository
                                                        where s.UserId == userId
                                                        select new ProfessorBasicInfoDto
                                                        {
-                                                           Id = userId,
+                                                           Id = s.AssignedProfessor.Value,
                                                            FirstName = u.FirstName,
                                                            LastName = u.LastName,
                                                            Email = u.Email,
