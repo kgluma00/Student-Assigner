@@ -14,9 +14,9 @@ namespace SA.Core.Interfaces
         Task<Student> GetStudentById(int userId);
         void SaveStudentChoices(int[] choices, int userId);
         Task<ICollection<AssignedStudetnsDto>> GetAssignedStudents(int professorId);
-
-
         Task<MyResultDto> MyResults(int userId);
-
+        Task<List<Course>> GetAllCourses();
+        Task<List<UserDto>> GetAllStudentsByCoursesId(byte courseId);
+        Task<StudentProfessorDto> GetAllStudentProfessorDetails(int userId);
     }
 }

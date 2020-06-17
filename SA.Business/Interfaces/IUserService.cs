@@ -13,6 +13,8 @@ namespace SA.Business.Interfaces
         void SaveStudentChoices(string[] choices, int userId);
         Task<ICollection<AssignedStudetnsDto>> GetAssignedStudents(int professorId);
         Task<MyResultDto> MyResults(int userId);
-       
+        Task<List<CoursesDto>> GetAllCourses();
+        Task<List<UserDto>> GetAllStudentsByCoursesId(byte courseId);
+        Task<StudentProfessorDto> GetAllStudentProfessorDetails(int studentId);
     }
 }

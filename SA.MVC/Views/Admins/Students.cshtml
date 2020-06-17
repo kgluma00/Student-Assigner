@@ -1,0 +1,120 @@
+﻿@{
+    ViewData["Title"] = "Student-professor";
+    Layout = "_LayoutAdmin";
+
+}
+
+<div class="btn-group">
+    <button type="button" id="courseButton" class="btn btn-info">Odaberi studij</button>
+    <button type="button" class="btn btn-info dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <span class="sr-only">Toggle Dropdown</span>
+    </button>
+    <div class="dropdown-menu" id="courses">
+    </div>
+</div>
+
+<div class="btn-group">
+    <button type="button" id="studentButton" class="btn btn-info">Odaberi studenta</button>
+    <button type="button" class="btn btn-info dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <span class="sr-only">Toggle Dropdown</span>
+    </button>
+    <div class="dropdown-menu" id="students">
+    </div>
+</div>
+
+<button type="submit" id="resetButton">Resetiraj</button>
+
+@section Scripts {
+    <script>
+
+        var courseDropDown = [];
+        var studentsDropDown = [];
+
+
+        $(document).ready(function () {
+
+            loadCourses();
+
+            function loadCourses()
+            {
+                $.ajax({
+                    url: '@Url.Action("GetAllCourses", "Admins")',
+                    type: "GET",
+                    success: function (result) {
+                        $.each(result, function (idx, val) {
+                            var aElement = document.createElement("a");
+                            aElement.textContent = val.courseName;
+                            aElement.className = "dropdown-item";
+                            aElement.href = "#";
+                            aElement.id = val.id;
+                            courseDropDown.push(aElement);
+                        });
+                        $("#courses").html(courseDropDown);
+                    },
+                    error: function () {
+                        alert("Something went wrong call the police");
+                    }
+                });
+            }
+
+            $("#resetButton").click(function() {
+                $("#students").empty();
+                courseDropDown = [];
+                studentsDropDown = [];
+                $("#studentButton").text("Odaberi studenta");
+                $("#courseButton").text("Odaberi studij");
+
+
+                loadCourses();
+
+            });
+
+        $(".dropdown-menu#courses").click(function (event) {
+            var text = event.target.innerText
+            $("#courseButton").text(text);
+
+            $.ajax({
+                url: '@Url.Action("GetAllStudentsByCoursesId", "Admins")',
+                type: "GET",
+                data: { courseId: event.target.id },
+                    success: function (result) {
+                    $.each(result, function (idx, val) {
+                            var aElement = document.createElement("a");
+                            aElement.textContent = val.firstName + ' ' + val.lastName;
+                            aElement.className = "dropdown-item";
+                            aElement.href = "#";
+                            aElement.id = val.id;
+                            studentsDropDown.push(aElement);
+                        });
+                        $("#students").html(studentsDropDown);
+                    },
+                    error: function () {
+                        alert("Something went wrong call the police");
+                    }
+                  });
+        });
+
+            $(".dropdown-menu#students").click(function (event) {
+                var text = event.target.innerText
+                $("#studentButton").text(text);
+                console.log(event.target.id);
+
+                      $.ajax({
+                        url: '@Url.Action("GetAllStudentProfessorDetails", "Admins")',
+                        type: "GET",
+                        data: { userId: event.target.id },
+                            success: function (result) {
+                                console.log(result);
+                            },
+                            error: function () {
+                                alert("Something went wrong call the police");
+                            }
+                          });
+
+            });
+
+
+        });
+
+    </script>
+} 

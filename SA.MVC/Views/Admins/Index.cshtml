@@ -1,0 +1,50 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+    Layout = "_LayoutAdmin";
+
+}
+
+<div class="row w-75 h-50 mx-auto mt-5">
+    <div class="col-md">
+        <div class="card text-center border-0 shadow">
+            <div class="card-header bg-white">
+                Pokretanje sustava
+            </div>
+            <div class="card-body">
+                <h5 class="card-title">Pokrenite algoritam</h5>
+                <p class="card-text">Pokretanje algoritma zaustaviti će sve <strong>radnje</strong> sustava sve dok se algoritam ne izvrši.</p>
+                <a href="#" class="btn btn-danger" onclick="StartProcess()">Započnite dodjelu</a>
+            </div>
+            <div class="card-footer text-muted bg-white">
+                <strong>Upozorenje:</strong> jednom kada se algoritam pokrene, <span class="text-danger" style="font-weight:600;">neće</span> se moći zaustaviti.
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@section Scripts
+    {
+    <script type="text/javascript">
+        function StartProcess() {
+            Swal.fire({
+                title: 'Jeste li sigurni?',
+                text: "Algoritam se ne može zaustaviti",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#4eb5f1',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Započni obradu',
+                cancelButtonText: 'Odustani'
+            }).then((result) => {
+                if (result.value) {
+                    Swal.fire(
+                        'Obrada krenula!',
+                        'Uspješno ste započeli sa obradom',
+                        'success'
+                    )
+                }
+            })
+        }
+    </script>
+}

@@ -14,6 +14,7 @@ namespace Sa.Repository.Mappings
             CreateMap<User, UserDto>().ReverseMap();
             CreateMap<Student, StudentDto>().ReverseMap();
             CreateMap<Professor, ProfessorDto>().ReverseMap();
+            CreateMap<Course, CoursesDto>().ReverseMap();
         }
     }
 }
