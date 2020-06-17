@@ -1,67 +1,110 @@
-﻿@model IEnumerable<SA.Core.Dtos.AssignedStudetnsDto>
+﻿@using SA.Core.Enums;
+
+@model IEnumerable<SA.Core.Dtos.AssignedStudetnsDto>
 
 @{
     ViewData["Title"] = "ShowAssignedStudents";
     Layout = "_LayoutProfessor";
 }
 
-<h1>ShowAssignedStudents</h1>
+<h1 style="text-align:center">Moji Studenti</h1>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.StudentFirstName)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.StudentLastName)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.CourseId)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.AverageGrade)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.StudyLevel)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Comment)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model)
-        {
-            <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.StudentFirstName)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.StudentLastName)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.CourseId)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.AverageGrade)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.StudyLevel)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Comment)
-                </td>
-                <td>
-                    @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
-                    @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
-                    @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
-                </td>
-            </tr>
-        }
-    </tbody>
-</table>
+
+<div class="row">
+    <div class="card-body overflow-auto w-100">
+        <div class="card card border-0 shadow text-center">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+
+                        <th scope="col">
+                            @Html.DisplayNameFor(model => model.StudentFirstName)
+                        </th>
+                        <th scope="col">
+                            @Html.DisplayNameFor(model => model.StudentLastName)
+                        </th>
+                        <th scope="col">
+                            @Html.DisplayNameFor(model => model.CourseId)
+                        </th>
+                        <th scope="col">
+                            @Html.DisplayNameFor(model => model.AverageGrade)
+                        </th>
+                        <th scope="col">
+                            @Html.DisplayNameFor(model => model.StudyLevel)
+                        </th>
+                        <th scope="col">
+                            @Html.DisplayNameFor(model => model.Comment)
+                        </th>
+
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr class="text-center">
+
+                            <td>
+                                @Html.DisplayFor(modelItem => item.StudentFirstName)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.StudentLastName)
+                            </td>
+                            <td>
+                                @if (item.CourseId == (int)DbEnums.Courses.Računarstvo)
+                                {
+                                    <p>Računarstvo</p>
+                                }
+                                @if (item.CourseId == (int)DbEnums.Courses.Strojarstvo)
+                                {
+                                    <p>Strojarstvo</p>
+                                }
+                                @if (item.CourseId == (int)DbEnums.Courses.Elektrotehnika)
+                                {
+                                    <p>Elektrotehnika</p>
+                                }
+                                @if (item.CourseId == (int)DbEnums.Courses.Brodogradnja)
+                                {
+                                    <p>Brodogradnja</p>
+                                }
+
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.AverageGrade)
+                            </td>
+                            <td>
+                                @if (item.StudyLevel == (int)DbEnums.StudyLevel.Diplomski)
+                                {
+                                    <p>Diplomski</p>
+                                }
+                                @if (item.StudyLevel == (int)DbEnums.StudyLevel.Završni)
+                                {
+                                    <p>Završni</p>
+                                }
+
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Comment)
+                            </td>
+
+                        </tr>
+
+
+                    }
+                </tbody>
+
+            </table>
+
+
+        </div>
+    </div>
+</div>
+
+<div class="row justify-content-end mx-0">
+
+    <button type="button" class="btn btn-primary" style="background-color:#008000 !important; border-color:#008000 !important;">Izvoz u Excel</button>
+    <button type="button" class="btn btn-danger ml-3">Izvoz u PDF</button>
+</div>
+
+
+
+
