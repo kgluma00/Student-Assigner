@@ -68,5 +68,15 @@ namespace SA.Business.Services
         {
             return await _saRepository.GetAllStudentProfessorDetails(studentId);
         }
+
+        public async Task<bool> GetStudentAssignedInformation(int userId)
+        {
+            return await _saRepository.GetStudentAssignedInformation(userId);
+        }
+
+        public async  Task<bool> CheckIfSystemAlgorithmStarted()
+        {
+            return await _saRepository.CheckIfSystemAlgorithmStarted();
+        }
     }
 }

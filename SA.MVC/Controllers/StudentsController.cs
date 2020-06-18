@@ -22,13 +22,14 @@ namespace SA.MVC.Controllers
         }
 
         [HttpGet]
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
             var userHomeDto = new StudentHomeDto();
-
             var claims = User.Claims.ToList();
-            userHomeDto.RoleId = byte.Parse(claims[2].Value);
+            var chosenProfessors = await _userService.GetStudentAssignedInformation(int.Parse(claims[0].Value));
+
             userHomeDto.Id = int.Parse(claims[0].Value);
+            userHomeDto.AssignedProfessor = chosenProfessors;
 
             return View(userHomeDto);
         }

@@ -6,6 +6,7 @@ using SA.MVC.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -106,8 +107,6 @@ namespace Sa.Repository
 
         public async Task<ICollection<AssignedStudetnsDto>> GetAssignedStudents(int professorId)
         {
-            //var assignedStudents = await _applicationContext.Students.Where(s => s.AssignedProfessor == professorId).ToListAsync();
-
             return await (from u in _applicationContext.Users
                           join s in _applicationContext.Students
                           on u.Id equals s.UserId
@@ -169,21 +168,21 @@ namespace Sa.Repository
                                         }).Distinct().FirstOrDefaultAsync();
 
             var professorBasicInfoDto = await (from spc in _applicationContext.StudentProfessorChoices
-                                          join p in _applicationContext.Professors
-                                          on spc.ProfessorId equals p.UserId
-                                          join u in _applicationContext.Users
-                                          on p.UserId equals u.Id
-                                          where spc.StudentId == userId
-                                          select new ProfessorBasicInfoDto
-                                          {
-                                              Id = spc.ProfessorId,
-                                              FirstName = u.FirstName,
-                                              LastName = u.LastName,
-                                              Email = u.Email,
-                                              AreaOfInterestOne = p.AreaOfInterestOne,
-                                              AreaOfInterestTwo = p.AreaOfInterestTwo,
-                                              AreaOfInterestThree = p.AreaOfInterestThree
-                                          }).ToListAsync();
+                                               join p in _applicationContext.Professors
+                                               on spc.ProfessorId equals p.UserId
+                                               join u in _applicationContext.Users
+                                               on p.UserId equals u.Id
+                                               where spc.StudentId == userId
+                                               select new ProfessorBasicInfoDto
+                                               {
+                                                   Id = spc.ProfessorId,
+                                                   FirstName = u.FirstName,
+                                                   LastName = u.LastName,
+                                                   Email = u.Email,
+                                                   AreaOfInterestOne = p.AreaOfInterestOne,
+                                                   AreaOfInterestTwo = p.AreaOfInterestTwo,
+                                                   AreaOfInterestThree = p.AreaOfInterestThree
+                                               }).ToListAsync();
 
             var assignedProfessorBasicInfoDto = await (from s in _applicationContext.Students
                                                        join p in _applicationContext.Professors
@@ -202,11 +201,23 @@ namespace Sa.Repository
                                                            AreaOfInterestThree = p.AreaOfInterestThree
                                                        }).FirstOrDefaultAsync();
 
-            return new StudentProfessorDto 
-            {   StudentUserDto = studentUserDto, 
-                ProfessorBasicInfoDto = professorBasicInfoDto, 
-                AssignedProfessorBasicInfoDto = assignedProfessorBasicInfoDto 
+            return new StudentProfessorDto
+            {
+                StudentUserDto = studentUserDto,
+                ProfessorBasicInfoDto = professorBasicInfoDto,
+                AssignedProfessorBasicInfoDto = assignedProfessorBasicInfoDto
             };
+        }
+
+        public async Task<bool> GetStudentAssignedInformation(int userId)
+        {
+            return await _applicationContext.StudentProfessorChoices.Where(u => u.StudentId == userId).AnyAsync();
+        }
+
+        public async Task<bool> CheckIfSystemAlgorithmStarted()
+        {
+            var x = await _applicationContext.Students.AnyAsync(ap => ap.AssignedProfessor != null);
+            return x;
         }
     }
 }

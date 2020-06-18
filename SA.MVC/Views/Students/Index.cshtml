@@ -3,51 +3,61 @@
 @model StudentHomeDto
 @{
     ViewData["Title"] = "Home Page";
-    if (Model.RoleId == (int)DbEnums.Roles.Student)
-    {
-        Layout = "_Layout";
-    }
+    Layout = "_Layout";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Dobrodošli</h1>
-    <p>Molimo vas odaberite <strong class="text-info">željene</strong> mentore.</p>
-</div>
+@if (!Model.AssignedProfessor)
+{
 
-<div class="container">
-    <div class="row justify-content-between">
-        <div class="col-md">
-            <div class="card card border-0 shadow card-height">
-                <div class="card-body overflow-auto">
-                    <h5 class="card-title">Ponuđeni mentori</h5>
-                    <p class="card-text">Molimo vas odaberi točno <strong>pet</strong> mentora.</p>
-                    <hr />
-                    <div class="row">
-                        <ul class="list-group border-0" id="lst">
-                        </ul>
+
+    <div class="text-center">
+        <h1 class="display-4">Dobrodošli</h1>
+        <p>Molimo vas odaberite <strong class="text-info">željene</strong> mentore.</p>
+    </div>
+
+    <div class="container">
+        <div class="row justify-content-between">
+            <div class="col-md">
+                <div class="card card border-0 shadow card-height">
+                    <div class="card-body overflow-auto">
+                        <h5 class="card-title">Ponuđeni mentori</h5>
+                        <p class="card-text" id="mentorsNumber"></p>
+                        <hr />
+                        <div class="row">
+                            <ul class="list-group border-0" id="lst">
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md">
+                <div class="card border-0 shadow card-height">
+                    <div class="card-body overflow-auto">
+                        <h5 class="card-title">Odabrani mentori</h5>
+                        <p class="card-text">Provjerite izbor, kasnije izmjene <strong>neće</strong> biti moguće.</p>
+                        <hr />
+                        <div class="row">
+                            <ul class="list-group border-0" id="odabir">
+                            </ul>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-        <div class="col-md">
-            <div class="card border-0 shadow card-height">
-                <div class="card-body overflow-auto">
-                    <h5 class="card-title">Odabrani mentori</h5>
-                    <p class="card-text">Provjerite izbor, kasnije izmjene <strong>neće</strong> biti moguće.</p>
-                    <hr />
-                    <div class="row">
-                        <ul class="list-group border-0" id="odabir">
-                        </ul>
-                    </div>
-                </div>
-            </div>
+        <div class="row justify-content-around mt-5">
+            <a class="btn btn-info p-3 w-25" href="#" onclick="SaveRecords()">Spremi odabir</a>
         </div>
     </div>
-    <div class="row justify-content-around mt-5">
-        <a class="btn btn-info p-3 w-25" href="#" onclick="SaveRecords()">Spremi odabir</a>
-    </div>
-</div>
+}
 
+else
+{
+    <div class="text-center">
+        <h1 class="display-4">Dobrodošli</h1>
+        <p>Već ste odabrali svoje mentori, molimo pričekajte na <strong class="text-warning">objavu</strong> rezultata.</p>
+        <a asp-action="MyResults" asp-controller="Students" class="btn btn-primary">Rezultati</a>
+    </div>
+}
 
 @section Scripts
     {
@@ -55,17 +65,31 @@
     <script type="text/javascript">
         var professorArray = [];
         var chosenProfessorArray = [];
+        var response = 0;
 
         $(document).ready(function () {
 
             loadData();
             //Dohvaća sve podatke preko APIJA
             function loadData() {
-                var items = '';
                 $.ajax({
                     url: '@Url.Action("GetProfessorsByCourse", "Students", new { id = @Model.Id})',
                     type: "GET",
                     success: function (resp) {
+                        response = resp;
+                        if (resp.length == 7) {
+                            $("#mentorsNumber").html("Molimo vas odaberite točno <strong>pet </strong>mentora.");
+                        }
+                        else if (resp.length == 4) {
+                            $("#mentorsNumber").html("Molimo vas odaberite točno <strong>dva </strong>mentora.");
+                        }
+                        else if (resp.length == 2) {
+                            $("#mentorsNumber").html("Molimo vas odaberite točno <strong>dva </strong>mentora.");
+                        }
+                        else {
+                            $("#mentorsNumber").html("Molimo vas odaberite <strong>više </strong>mentora.");
+                        }
+
                         $.each(resp, function (idx, val) {
                             var footer = document.createElement("footer");
                             footer.className = "blockquote-footer";
@@ -166,11 +190,22 @@
 
         function SaveRecords() {
             var getElements = document.querySelectorAll('#odabir');
+            var countElements = document.querySelectorAll('#odabir > .list-group-item');
             var records = getElements[0].childNodes;
             var i;
-
-            //if (records.length != 5) return false;
             var professorIds = [];
+
+            var professorNumberCheck = CountProfessors(countElements.length)
+
+            if (!professorNumberCheck) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Greška...',
+                    text: 'Pogrešan broj mentora.',
+                    footer: '<small>Broj mentora po studijima: Računarstvo-5, strojarstvo-5, brodogradnja-1, elektrotehnika-2.</small>'
+                });
+                return false;
+            }
 
             for (i = 0; i < records.length; i++) {
                 professorIds[i] = records[i].id;
@@ -196,6 +231,19 @@
                     })
                 }
             });
+        }
+
+        function CountProfessors(professorsNumber) {
+            if (response.length == 7)
+                if (professorsNumber != 5)
+                    return false;
+                else if (response.length == 4)
+                if (professorsNumber != 2)
+                    return false;
+                else if (response.length == 2)
+                    if (professorsNumber != 2)
+                            return false;
+            return true;
         }
 
     </script>

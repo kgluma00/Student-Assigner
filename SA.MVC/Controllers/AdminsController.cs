@@ -21,9 +21,10 @@ namespace SA.MVC.Controllers
             _userService = userService;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            return View();
+            var systemStatus = await _userService.CheckIfSystemAlgorithmStarted();
+            return View(systemStatus);
         }
 
         public IActionResult Students()
