@@ -216,8 +216,7 @@ namespace Sa.Repository
 
         public async Task<bool> CheckIfSystemAlgorithmStarted()
         {
-            var x = await _applicationContext.Students.AnyAsync(ap => ap.AssignedProfessor != null);
-            return x;
+            return await _applicationContext.Students.AnyAsync(ap => ap.AssignedProfessor != null);
         }
 
         public async Task<List<StudentInfoDto>> GetAllStudentsAlgorithmInfo()
@@ -234,20 +233,23 @@ namespace Sa.Repository
                                           ProfessorDtos = null
                                       }).ToListAsync();
 
-            for (int i = 0; i < studentsInfo.Count; i++)
+            var professors = await (from p in _applicationContext.Professors
+                                   select new ProfessorDto
+                                   {
+                                       Id = p.Id,
+                                       UserId = p.UserId,
+                                       MaxPoints = p.MaxPoints
+                                   }).ToListAsync();
+
+            var choices = await _applicationContext.StudentProfessorChoices.ToListAsync();
+
+            foreach (var student in studentsInfo)
             {
-                var professor = await (from p in _applicationContext.Professors
-                                       join spc in _applicationContext.StudentProfessorChoices
-                                       on p.UserId equals spc.ProfessorId
-                                       where spc.StudentId == studentsInfo[i].UserId
-                                       select new ProfessorDto
-                                       {
-                                           Id = p.Id,
-                                           UserId = p.UserId,
-                                           MaxPoints = p.MaxPoints
-                                       }).ToListAsync();
-                studentsInfo[i].ProfessorDtos = professor;
+                var professorIds = choices.Where(c => c.StudentId == student.UserId).Select(c => c.ProfessorId);
+                student.ProfessorDtos = professors.Where(p => professorIds.Contains(p.UserId)).ToList();
             }
+
+            var x = studentsInfo.Any(p => p.ProfessorDtos == null);
 
             return studentsInfo;
         }

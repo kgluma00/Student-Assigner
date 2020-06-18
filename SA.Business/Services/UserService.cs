@@ -74,14 +74,62 @@ namespace SA.Business.Services
             return await _saRepository.GetStudentAssignedInformation(userId);
         }
 
-        public async  Task<bool> CheckIfSystemAlgorithmStarted()
+        public async Task<bool> CheckIfSystemAlgorithmStarted()
         {
             return await _saRepository.CheckIfSystemAlgorithmStarted();
         }
 
         public async Task<List<StudentInfoDto>> GetAllStudentsAlgorithmInfo()
         {
-            return await _saRepository.GetAllStudentsAlgorithmInfo();      
+            var studentInfoDto = await _saRepository.GetAllStudentsAlgorithmInfo();
+            CalculatePoints(studentInfoDto);
+            studentInfoDto = studentInfoDto.OrderByDescending(p => p.Points).ToList();
+            AssignProfessorToStudent(studentInfoDto);
+
+            foreach (var item in studentInfoDto)
+            {
+
+            }
+
+            var x = studentInfoDto.Where(p => p.AssignedProfessor == 0).ToList();
+
+            return studentInfoDto;
+        }
+
+        private void AssignProfessorToStudent(List<StudentInfoDto> studentInfoDtos)
+        {
+            foreach (var student in studentInfoDtos)
+            {
+                foreach (var professor in student.ProfessorDtos)
+                {
+                    if (CheckProfessorAvailability(professor, student.StudyLevel))
+                    {
+                        student.AssignedProfessor = professor.UserId;
+                        professor.MaxPoints -= student.StudyLevel;
+                        break;
+                    }
+                }
+            }
+        }
+
+        private bool CheckProfessorAvailability(ProfessorDto professorBasicInfoDto, int studentStudyLevel)
+        {
+            return (professorBasicInfoDto.MaxPoints - studentStudyLevel >= 0);
+        }
+
+        private void CalculatePoints(List<StudentInfoDto> studentInfoDtos)
+        {
+            foreach (var student in studentInfoDtos)
+            {
+                if (student.NmbrOfRptYears == 1)
+                    student.Points = Math.Round(student.AverageGrade * 80, 4);
+                else if (student.NmbrOfRptYears == 2)
+                    student.Points = Math.Round(student.AverageGrade * 60, 4);
+                else if (student.NmbrOfRptYears == 3)
+                    student.Points = Math.Round(student.AverageGrade * 40, 4);
+                else
+                    student.Points = Math.Round(student.AverageGrade * 100, 4);
+            }
         }
     }
 }
