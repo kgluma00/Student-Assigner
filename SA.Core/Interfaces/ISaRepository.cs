@@ -20,5 +20,6 @@ namespace SA.Core.Interfaces
         Task<StudentProfessorDto> GetAllStudentProfessorDetails(int userId);
         Task<bool> GetStudentAssignedInformation(int userId);
         Task<bool> CheckIfSystemAlgorithmStarted();
+        Task<List<StudentInfoDto>> GetAllStudentsAlgorithmInfo();
     }
 }

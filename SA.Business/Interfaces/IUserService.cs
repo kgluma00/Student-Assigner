@@ -18,6 +18,7 @@ namespace SA.Business.Interfaces
         Task<StudentProfessorDto> GetAllStudentProfessorDetails(int studentId);
         Task<bool> GetStudentAssignedInformation(int userId);
         Task<bool> CheckIfSystemAlgorithmStarted();
+        Task<List<StudentInfoDto>> GetAllStudentsAlgorithmInfo();
 
     }
 }

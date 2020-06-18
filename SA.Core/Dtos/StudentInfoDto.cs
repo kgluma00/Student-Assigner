@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SA.Core.Dtos;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -16,5 +17,6 @@ namespace SA.MVC.Models
         public string Comment { get; set; }
         public byte StudyLevel { get; set; }
         public int AssignedProfessor { get; set; }
+        public List<ProfessorDto> ProfessorDtos { get; set; }
     }
 }

@@ -49,5 +49,11 @@ namespace SA.MVC.Controllers
         {
             return await _userService.GetAllStudentProfessorDetails(int.Parse(userId));
         }
+
+        [HttpGet]
+        public async Task<List<StudentInfoDto>> GetAllStudentsAlgorithmInfo()
+        {
+            return await _userService.GetAllStudentsAlgorithmInfo();
+        }
     }
 }

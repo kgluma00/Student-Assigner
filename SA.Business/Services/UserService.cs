@@ -78,5 +78,10 @@ namespace SA.Business.Services
         {
             return await _saRepository.CheckIfSystemAlgorithmStarted();
         }
+
+        public async Task<List<StudentInfoDto>> GetAllStudentsAlgorithmInfo()
+        {
+            return await _saRepository.GetAllStudentsAlgorithmInfo();      
+        }
     }
 }
