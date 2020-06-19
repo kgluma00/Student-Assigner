@@ -32,7 +32,7 @@ namespace SA.MVC.Controllers
             return View();
         }
 
-        public IActionResult Unsorted()
+        public IActionResult Unassigned()
         {
             return View();
         }
@@ -65,6 +65,12 @@ namespace SA.MVC.Controllers
         public async Task<int> GetAllStudentsAlgorithmInfo()
         {
             return await _userService.GetAllStudentsAlgorithmInfo();
+        }
+
+        [HttpGet]
+        public async Task<List<StudentUserDto>> GetUnassignedStudentsByCourseId(string courseId)
+        {
+            return await _userService.GetUnassignedStudentsByCourseId(byte.Parse(courseId));
         }
     }
 }

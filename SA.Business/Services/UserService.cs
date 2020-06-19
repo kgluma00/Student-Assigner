@@ -132,5 +132,10 @@ namespace SA.Business.Services
         {
             return await _saRepository.CountUnassignedStudents();
         }
+
+        public async Task<List<StudentUserDto>> GetUnassignedStudentsByCourseId(byte courseId)
+        {
+            return await _saRepository.GetUnassignedStudentsByCourseId(courseId);
+        }
     }
 }

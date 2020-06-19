@@ -23,5 +23,6 @@ namespace SA.Core.Interfaces
         Task<bool> CheckIfSystemAlgorithmStarted();
         Task<List<StudentInfoDto>> GetAllStudentsAlgorithmInfo();
         Task<int> CountUnassignedStudents();
+        Task<List<StudentUserDto>> GetUnassignedStudentsByCourseId(byte courseId);
     }
 }

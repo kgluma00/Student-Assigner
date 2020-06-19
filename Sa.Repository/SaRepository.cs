@@ -37,6 +37,7 @@ namespace Sa.Repository
             {
                 _applicationContext.Students.Attach(student);
                 _applicationContext.Entry(student).Property(x => x.AssignedProfessor).IsModified = true;
+                _applicationContext.Entry(student).Property(x => x.Points).IsModified = true;
             }
 
             return await _applicationContext.SaveChangesAsync();
@@ -261,8 +262,6 @@ namespace Sa.Repository
                 student.ProfessorDtos = professors.Where(p => professorIds.Contains(p.UserId)).ToList();
             }
 
-            var x = studentsInfo.Any(p => p.ProfessorDtos == null);
-
             return studentsInfo;
         }
 
@@ -271,6 +270,26 @@ namespace Sa.Repository
             var unAssignedStudents = await _applicationContext.Students.Where(ap => ap.AssignedProfessor == 0).ToListAsync();
 
             return unAssignedStudents.Count;
+        }
+
+        public async Task<List<StudentUserDto>> GetUnassignedStudentsByCourseId(byte courseId)
+        {
+
+            return await (from s in _applicationContext.Students
+                                            join u in _applicationContext.Users
+                                            on s.UserId equals u.Id
+                                            where s.CourseId == courseId && s.AssignedProfessor == 0
+                                            select new StudentUserDto
+                                            {
+                                                FirstName = u.FirstName,
+                                                LastName =  u.LastName,
+                                                UserId = s.UserId,
+                                                AverageGrade = s.AverageGrade,
+                                                NmbrOfRptYears = s.NmbrOfRptYears,
+                                                Comment = s.Comment
+                                            }
+                                            ).ToListAsync();
+
         }
     }
 }

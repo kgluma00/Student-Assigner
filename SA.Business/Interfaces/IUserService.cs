@@ -20,5 +20,6 @@ namespace SA.Business.Interfaces
         Task<bool> CheckIfSystemAlgorithmStarted();
         Task<int> GetAllStudentsAlgorithmInfo();
         Task<int> CountUnassignedStudents();
+        Task<List<StudentUserDto>> GetUnassignedStudentsByCourseId(byte courseId);
     }
 }
