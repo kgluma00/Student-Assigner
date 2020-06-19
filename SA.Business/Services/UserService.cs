@@ -79,20 +79,17 @@ namespace SA.Business.Services
             return await _saRepository.CheckIfSystemAlgorithmStarted();
         }
 
-        public async Task<List<StudentInfoDto>> GetAllStudentsAlgorithmInfo()
+        public async Task<int> GetAllStudentsAlgorithmInfo()
         {
             var studentInfoDto = await _saRepository.GetAllStudentsAlgorithmInfo();
             CalculatePoints(studentInfoDto);
             studentInfoDto = studentInfoDto.OrderByDescending(p => p.Points).ToList();
             AssignProfessorToStudent(studentInfoDto);
 
-            var notAssignedStudents = studentInfoDto.Where(p => p.AssignedProfessor == 0).ToList();
-
+            var notAssignedStudents = studentInfoDto.Where(p => p.AssignedProfessor == 0).ToList().Count;
             var mapStudents = _mapper.Map<List<StudentInfoDto>, List<Student>>(studentInfoDto);
 
-            var x = await _saRepository.UpdateAsyncEntity(mapStudents);
-
-            return studentInfoDto;
+            return await _saRepository.UpdateAsyncEntity(mapStudents);
         }
 
         private void AssignProfessorToStudent(List<StudentInfoDto> studentInfoDtos)
@@ -129,6 +126,11 @@ namespace SA.Business.Services
                 else
                     student.Points = Math.Round(student.AverageGrade * 100, 4);
             }
+        }
+
+        public async Task<int> CountUnassignedStudents()
+        {
+            return await _saRepository.CountUnassignedStudents();
         }
     }
 }

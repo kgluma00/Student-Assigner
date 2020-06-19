@@ -22,5 +22,6 @@ namespace SA.Core.Interfaces
         Task<bool> GetStudentAssignedInformation(int userId);
         Task<bool> CheckIfSystemAlgorithmStarted();
         Task<List<StudentInfoDto>> GetAllStudentsAlgorithmInfo();
+        Task<int> CountUnassignedStudents();
     }
 }

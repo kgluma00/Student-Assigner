@@ -32,6 +32,11 @@ namespace SA.MVC.Controllers
             return View();
         }
 
+        public IActionResult Unsorted()
+        {
+            return View();
+        }
+
         [HttpGet]
         public async Task<List<CoursesDto>> GetAllCourses()
         {
@@ -51,7 +56,13 @@ namespace SA.MVC.Controllers
         }
 
         [HttpGet]
-        public async Task<List<StudentInfoDto>> GetAllStudentsAlgorithmInfo()
+        public async Task<int> CountUnassignedStudents()
+        {
+            return await _userService.CountUnassignedStudents();
+        }
+
+        [HttpGet]
+        public async Task<int> GetAllStudentsAlgorithmInfo()
         {
             return await _userService.GetAllStudentsAlgorithmInfo();
         }

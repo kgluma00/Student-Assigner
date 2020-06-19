@@ -266,5 +266,11 @@ namespace Sa.Repository
             return studentsInfo;
         }
 
+        public async Task<int> CountUnassignedStudents()
+        {
+            var unAssignedStudents = await _applicationContext.Students.Where(ap => ap.AssignedProfessor == 0).ToListAsync();
+
+            return unAssignedStudents.Count;
+        }
     }
 }
