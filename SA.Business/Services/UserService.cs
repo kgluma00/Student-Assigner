@@ -86,12 +86,11 @@ namespace SA.Business.Services
             studentInfoDto = studentInfoDto.OrderByDescending(p => p.Points).ToList();
             AssignProfessorToStudent(studentInfoDto);
 
-            foreach (var item in studentInfoDto)
-            {
+            var notAssignedStudents = studentInfoDto.Where(p => p.AssignedProfessor == 0).ToList();
 
-            }
+            var mapStudents = _mapper.Map<List<StudentInfoDto>, List<Student>>(studentInfoDto);
 
-            var x = studentInfoDto.Where(p => p.AssignedProfessor == 0).ToList();
+            var x = await _saRepository.UpdateAsyncEntity(mapStudents);
 
             return studentInfoDto;
         }

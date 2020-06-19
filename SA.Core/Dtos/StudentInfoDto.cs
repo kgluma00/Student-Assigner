@@ -9,6 +9,7 @@ namespace SA.MVC.Models
 {
     public class StudentInfoDto
     {
+        public int Id { get; set; }
         public int UserId { get; set; }
         public string CourseName { get; set; }
         public double AverageGrade { get; set; }

@@ -31,6 +31,17 @@ namespace Sa.Repository
             return await _applicationContext.SaveChangesAsync();
         }
 
+        public async Task<int> UpdateAsyncEntity(List<Student> students)
+        {
+            foreach (var student in students)
+            {
+                _applicationContext.Students.Attach(student);
+                _applicationContext.Entry(student).Property(x => x.AssignedProfessor).IsModified = true;
+            }
+
+            return await _applicationContext.SaveChangesAsync();
+        }
+
         public async Task<List<ProfessorBasicInfoDto>> GetProfessorsByCourse(byte courseId)
         {
             return await (from p in _applicationContext.Professors
@@ -224,6 +235,7 @@ namespace Sa.Repository
             var studentsInfo = await (from s in _applicationContext.Students
                                       select new StudentInfoDto
                                       {
+                                          Id = s.Id,
                                           UserId = s.UserId,
                                           AverageGrade = s.AverageGrade,
                                           NmbrOfRptYears = s.NmbrOfRptYears,
@@ -253,5 +265,6 @@ namespace Sa.Repository
 
             return studentsInfo;
         }
+
     }
 }

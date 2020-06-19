@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using SA.Core.Dtos;
 using SA.Core.Entites;
+using SA.MVC.Models;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -15,6 +16,7 @@ namespace Sa.Repository.Mappings
             CreateMap<Student, StudentDto>().ReverseMap();
             CreateMap<Professor, ProfessorDto>().ReverseMap();
             CreateMap<Course, CoursesDto>().ReverseMap();
+            CreateMap<Student, StudentInfoDto>().ReverseMap();
         }
     }
 }

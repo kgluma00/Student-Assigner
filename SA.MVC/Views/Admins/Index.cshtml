@@ -22,8 +22,8 @@ else
                 <div class="card-body">
                     <h5 class="card-title">Pokrenite algoritam</h5>
                     <p class="card-text">Pokretanje algoritma zaustaviti će sve <strong>radnje</strong> sustava sve dok se algoritam ne izvrši.</p>
-                    @*<a href="#" class="btn btn-danger" onclick="StartProcess()">Započnite dodjelu</a>*@
-                    <a asp-action="GetAllStudentsAlgorithmInfo" asp-controller="Admins" class="btn btn-danger">Započnite dodjelu</a>
+                    <a href="#" class="btn btn-danger" id="assignStudents">Započnite dodjelu</a>
+                    @*<a asp-action="GetAllStudentsAlgorithmInfo" asp-controller="Admins" class="btn btn-danger">Započnite dodjelu</a>*@
 
                 </div>
                 <div class="card-footer text-muted bg-white">
@@ -38,7 +38,10 @@ else
 @section Scripts
     {
     <script type="text/javascript">
-        function StartProcess() {
+
+        $(document).ready(function () {
+
+            $("#assignStudents").click(function () {
             Swal.fire({
                 title: 'Jeste li sigurni?',
                 text: "Algoritam se ne može zaustaviti",
@@ -50,13 +53,29 @@ else
                 cancelButtonText: 'Odustani'
             }).then((result) => {
                 if (result.value) {
-                    Swal.fire(
-                        'Obrada krenula!',
-                        'Uspješno ste započeli sa obradom',
-                        'success'
-                    )
+                          $.ajax({
+                            url: '@Url.Action("GetAllStudentsAlgorithmInfo", "Admins")',
+                            type: "GET",
+                            success: function (resp) {
+                                Swal.fire(
+                                    'Obrada započeta!',
+                                    'Obrada i dodjela mentora je započela.',
+                                    'success',
+                                )
+                            },
+                            error: function (err) {
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Greška...',
+                                    text: 'Pogrešan broj mentora.',
+                                    footer: '<small>Broj mentora po studijima: Računarstvo-5, strojarstvo-5, brodogradnja-1, elektrotehnika-2.</small>'
+                                })
+                            }
+                           });
                 }
             })
-        }
+        });
+            });
+
     </script>
 }
