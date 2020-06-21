@@ -10,6 +10,7 @@ namespace SA.Business.Interfaces
     {
         Task<User> Login(User user);
         Task<List<ProfessorBasicInfoDto>> GetProfessorsByCourse(int userId);
+        Task<List<ProfessorBasicInfoDto>> GetProfessorsByCourseAndMaxPoints(byte courseId);
         void SaveStudentChoices(string[] choices, int userId);
         Task<ICollection<AssignedStudetnsDto>> GetAssignedStudents(int professorId);
         Task<MyResultDto> MyResults(int userId);

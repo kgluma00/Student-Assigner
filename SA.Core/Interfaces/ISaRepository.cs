@@ -9,9 +9,11 @@ namespace SA.Core.Interfaces
     public interface ISaRepository
     {
         Task<int> AddAsyncEntity<T>(List<T> entites) where T : class;
-        Task<int> UpdateAsyncEntity(List<Student> students);
+        Task<int> UpdateAsyncStudentEntity(List<Student> students);
+        Task<int> UpdateAsyncProfessorEntity(List<Professor> professor);
         Task<User> Login(User user);
         Task<List<ProfessorBasicInfoDto>> GetProfessorsByCourse(byte courseId);
+        Task<List<ProfessorBasicInfoDto>> GetProfessorsByCourseAndMaxPoints(byte courseId);
         Task<Student> GetStudentById(int userId);
         void SaveStudentChoices(int[] choices, int userId);
         Task<ICollection<AssignedStudetnsDto>> GetAssignedStudents(int professorId);

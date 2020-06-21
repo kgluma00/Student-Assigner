@@ -72,5 +72,11 @@ namespace SA.MVC.Controllers
         {
             return await _userService.GetUnassignedStudentsByCourseId(byte.Parse(courseId));
         }
+
+        [HttpGet]
+        public async Task<List<ProfessorBasicInfoDto>> GetProfessorsByCourseAndMaxPoints(string courseId)
+        {
+            return await _userService.GetProfessorsByCourseAndMaxPoints(byte.Parse(courseId));
+        }
     }
 }

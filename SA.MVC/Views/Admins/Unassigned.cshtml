@@ -44,22 +44,41 @@
                 <p class="card-text">Glavne informacije o profesorima na <strong>odabranom</strong> smjeru.</p>
                 <hr />
                 <div class="row">
-                    <ul class="list-group w-100" id="assignedProfessor">
+                    <ul class="list-group w-100" id="availableProfessors">
                     </ul>
                 </div>
             </div>
         </div>
     </div>
 </div>
+
+<div class="row w-75 mx-auto mb-5 student-professor" style="visibility:hidden;">
+    <div class="col">
+        <div class="card border-0 shadow">
+            <div class="card-body overflow-auto" id="studentName">
+                <h6 class="card-title text-muted">Student: </h6>
+            </div>
+        </div>
+    </div>
+    <div class="col">
+        <div class="card card border-0 shadow">
+            <div class="card-body overflow-auto" id="professorName">
+                <h6 class="card-title text-muted">Profesor: </h6>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row justify-content-center mt-5 student-professor" style="visibility:hidden">
+    <a class="btn btn-info w-25" href="#">Spoji</a>
+</div>
+
 @section Scripts {
     <script>
 
         var courseDropDown = [];
         var studentsDropDown = [];
-        var liElementStudents = [];
         var liElementsProfessors = [];
-        var footerLiElementsProfessors = [];
-        var liElementsAssignedProfessor = [];
 
 
         $(document).ready(function () {
@@ -91,16 +110,11 @@
                 $("#students").empty();
                 courseDropDown = [];
                 studentsDropDown = [];
-                liElementStudents = [];
                 liElementsProfessors = [];
-                footerLiElementsProfessors = [];
-                liElementsAssignedProfessor = [];
 
-                $("#studentButton").text("Odaberi studenta");
                 $("#courseButton").text("Odaberi studij");
-                $("#studentInfo").html(liElementStudents);
-                $("#chosenProfessors").html(liElementsProfessors);
-                $("#assignedProfessor").html(liElementsAssignedProfessor);
+                $("#studentsInfo").html(studentsDropDown);
+                $("#availableProfessors").html(liElementsProfessors);
                 $(".card.border-0").css("height", "");
 
                 loadCourses();
@@ -116,7 +130,6 @@
                     type: "GET",
                     data: { courseId: event.target.id },
                     success: function (result) {
-                        console.log()
                         $.each(result, function (idx, val) {
                             var footer = document.createElement("footer");
                             footer.className = "blockquote-footer";
@@ -124,11 +137,11 @@
 
                             var liElement = document.createElement("li");
                             liElement.className = "list-group-item border-0";
-                            liElement.id = val.id;
+                            liElement.id = val.userId;
 
                             var aElement = document.createElement("a");
                             aElement.textContent = val.firstName + ' ' + val.lastName;
-                            aElement.className = "btn btn-dark professor";
+                            aElement.className = "btn btn-dark student";
                             aElement.href = "#";
 
                             liElement.appendChild(aElement);
@@ -136,6 +149,45 @@
                             studentsDropDown.push(liElement);
                         });
                         $("#studentsInfo").html(studentsDropDown);
+
+                        // fetcha sve buttone koji imaju klasu .list-group-item
+                        const buttonList = document.querySelectorAll('.list-group-item a');
+                        // Dodati referencu na klik na svaki dohvaćeni "button"
+                        for (let i = 0; i < buttonList.length; i++) {
+                            const button = buttonList[i];
+                            // Referenca na funkciju "handleButtonClick" koja automatski šalje "event" parametar
+                            button.addEventListener('click', handleButtonClickStudent);
+                        }
+
+                    $.ajax({
+                        url: '@Url.Action("GetProfessorsByCourseAndMaxPoints", "Admins")',
+                        type: "GET",
+                        data: { courseId: event.target.id },
+                        success: function (result) {
+                            $.each(result, function (idx, val) {
+                                var footer = document.createElement("footer");
+                                footer.className = "blockquote-footer";
+                                footer.textContent = val.areaOfInterestOne + ', ' + val.areaOfInterestTwo + ', ' + val.areaOfInterestThree;
+
+                                var liElement = document.createElement("li");
+                                liElement.className = "list-group-item border-0";
+
+                                var aElement = document.createElement("a");
+                                aElement.textContent = val.firstName + ' ' + val.lastName;
+                                aElement.className = "btn btn-secondary professor";
+                                aElement.href = "#";
+                                aElement.id = val.userId;
+
+                                liElement.appendChild(aElement);
+                                liElement.appendChild(footer);
+                                liElementsProfessors.push(liElement);
+                            });
+                            $("#availableProfessors").html(liElementsProfessors);
+                        },
+                        error: function () {
+                            alert("Something went wrong call the police");
+                        }
+                    });
                     },
                     error: function () {
                         alert("Something went wrong call the police");
@@ -143,24 +195,33 @@
                 });
             });
 
-            $(".dropdown-menu#students").click(function (event) {
-                var text = event.target.innerText
-                $("#studentButton").text(text);
+            function handleButtonClickStudent(e) {
+                console.log("e: " + e);
+                var hElement = document.createElement("h3");
+                hElement.textContent = e.target.innerText;
+                hElement.className = "";
+                hElement.id = e.path[1].id;
+                $("#studentName").append(hElement);
 
-                $.ajax({
-                    url: '@Url.Action("GetAllStudentProfessorDetails", "Admins")',
-                    type: "GET",
-                    data: { userId: event.target.id },
-                    success: function (result) {
-                        $(".card.border-0").css("height","62vh");
-                        createStudent(result.studentUserDto);
-                        createProfessorList(result.professorBasicInfoDto);
-                        createAssignedProfessor(result.assignedProfessorBasicInfoDto);
-                    },
-                    error: function () {
-                        alert("Something went wrong call the police");
-                    }
-                });
+                $(".student-professor").css("visibility", "visible");
+            }
+
+            $(document).on("click", ".professor", function () {
+                var professor = this; // or var clickedBtnID = this.id
+                var i = 0;
+
+                var hElement = document.createElement("h3");
+                hElement.textContent = professor.innerText;
+                hElement.className = "";
+                hElement.id = professor.id;
+
+                for (i = 0; i < liElementsProfessors.length; i++) {
+                    if (liElementsProfessors[i].children[0].id == professor.id)
+                        liElementsProfessors.splice(i, 1);
+                }
+
+                $("#availableProfessors").html(liElementsProfessors);
+                $("#professorName").append(hElement);
             });
 
         });

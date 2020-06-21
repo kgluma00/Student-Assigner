@@ -31,13 +31,26 @@ namespace Sa.Repository
             return await _applicationContext.SaveChangesAsync();
         }
 
-        public async Task<int> UpdateAsyncEntity(List<Student> students)
+      
+
+        public async Task<int> UpdateAsyncStudentEntity(List<Student> students)
         {
             foreach (var student in students)
             {
                 _applicationContext.Students.Attach(student);
                 _applicationContext.Entry(student).Property(x => x.AssignedProfessor).IsModified = true;
                 _applicationContext.Entry(student).Property(x => x.Points).IsModified = true;
+            }
+
+            return await _applicationContext.SaveChangesAsync();
+        }
+
+        public async Task<int> UpdateAsyncProfessorEntity(List<Professor> professors)
+        {
+            foreach (var professor in professors)
+            {
+                _applicationContext.Professors.Attach(professor);
+                _applicationContext.Entry(professor).Property(x => x.MaxPoints).IsModified = true;
             }
 
             return await _applicationContext.SaveChangesAsync();
@@ -284,12 +297,33 @@ namespace Sa.Repository
                                                 FirstName = u.FirstName,
                                                 LastName =  u.LastName,
                                                 UserId = s.UserId,
+                                                Points = s.Points,
                                                 AverageGrade = s.AverageGrade,
                                                 NmbrOfRptYears = s.NmbrOfRptYears,
                                                 Comment = s.Comment
                                             }
                                             ).ToListAsync();
 
+        }
+
+        public async  Task<List<ProfessorBasicInfoDto>> GetProfessorsByCourseAndMaxPoints(byte courseId)
+        {
+            return await (from p in _applicationContext.Professors
+                         join u in _applicationContext.Users
+                         on p.UserId equals u.Id
+                         where p.CourseId == courseId && p.MaxPoints > 0
+                         select new ProfessorBasicInfoDto
+                         {
+                             Id = u.Id,
+                             UserId = p.UserId,
+                             FirstName = u.FirstName,
+                             LastName = u.LastName,
+                             Email = u.Email,
+                             AreaOfInterestOne = p.AreaOfInterestOne,
+                             AreaOfInterestTwo = p.AreaOfInterestTwo,
+                             AreaOfInterestThree = p.AreaOfInterestThree
+                         }
+                   ).ToListAsync();
         }
     }
 }

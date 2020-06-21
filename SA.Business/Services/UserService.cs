@@ -86,10 +86,12 @@ namespace SA.Business.Services
             studentInfoDto = studentInfoDto.OrderByDescending(p => p.Points).ToList();
             AssignProfessorToStudent(studentInfoDto);
 
-            var notAssignedStudents = studentInfoDto.Where(p => p.AssignedProfessor == 0).ToList().Count;
+            var professors = studentInfoDto.SelectMany(p => p.ProfessorDtos).Distinct().ToList();
+            await _saRepository.UpdateAsyncProfessorEntity(_mapper.Map<List<ProfessorDto>,List<Professor>>(professors));
+
             var mapStudents = _mapper.Map<List<StudentInfoDto>, List<Student>>(studentInfoDto);
 
-            return await _saRepository.UpdateAsyncEntity(mapStudents);
+            return await _saRepository.UpdateAsyncStudentEntity(mapStudents);
         }
 
         private void AssignProfessorToStudent(List<StudentInfoDto> studentInfoDtos)
@@ -136,6 +138,11 @@ namespace SA.Business.Services
         public async Task<List<StudentUserDto>> GetUnassignedStudentsByCourseId(byte courseId)
         {
             return await _saRepository.GetUnassignedStudentsByCourseId(courseId);
+        }
+
+        public async Task<List<ProfessorBasicInfoDto>> GetProfessorsByCourseAndMaxPoints(byte courseId)
+        {
+            return await _saRepository.GetProfessorsByCourseAndMaxPoints(courseId);
         }
     }
 }
