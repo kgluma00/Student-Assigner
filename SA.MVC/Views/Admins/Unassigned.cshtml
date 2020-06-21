@@ -201,6 +201,14 @@
                 hElement.textContent = e.target.innerText;
                 hElement.className = "";
                 hElement.id = e.path[1].id;
+
+                for (i = 0; i < studentsDropDown.length; i++) {
+                    if (studentsDropDown[i].id == e.path[1].id)
+                        studentsDropDown.splice(i, 1);
+                }
+
+                $("#studentsInfo").html(studentsDropDown);
+
                 $("#studentName").append(hElement);
 
                 $(".student-professor").css("visibility", "visible");
