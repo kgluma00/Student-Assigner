@@ -78,5 +78,11 @@ namespace SA.MVC.Controllers
         {
             return await _userService.GetProfessorsByCourseAndMaxPoints(byte.Parse(courseId));
         }
+
+        [HttpPost]
+        public async Task<int> SaveStudentChoiceByAdminDecision(string studentId, string assignedProfessorId)
+        {
+            return await _userService.SaveStudentChoiceByAdminDecision(int.Parse(studentId), int.Parse(assignedProfessorId));
+        }
     }
 }

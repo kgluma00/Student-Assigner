@@ -22,5 +22,6 @@ namespace SA.Business.Interfaces
         Task<int> GetAllStudentsAlgorithmInfo();
         Task<int> CountUnassignedStudents();
         Task<List<StudentUserDto>> GetUnassignedStudentsByCourseId(byte courseId);
+        Task<int> SaveStudentChoiceByAdminDecision(int studentId, int assignedProfessorId);
     }
 }

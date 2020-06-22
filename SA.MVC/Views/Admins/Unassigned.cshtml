@@ -70,7 +70,7 @@
 </div>
 
 <div class="row justify-content-center mt-5 student-professor" style="visibility:hidden">
-    <a class="btn btn-info w-25" href="#">Spoji</a>
+    <a class="btn btn-info w-25" href="#" id="saveButton">Spoji</a>
 </div>
 
 @section Scripts {
@@ -116,6 +116,9 @@
                 $("#studentsInfo").html(studentsDropDown);
                 $("#availableProfessors").html(liElementsProfessors);
                 $(".card.border-0").css("height", "");
+                $("#studentName > h3").text("");
+                $("#professorName > h3").text("");
+                $(".student-professor").css("visibility", "hidden");
 
                 loadCourses();
 
@@ -130,6 +133,7 @@
                     type: "GET",
                     data: { courseId: event.target.id },
                     success: function (result) {
+                        console.log(result);
                         $.each(result, function (idx, val) {
                             var footer = document.createElement("footer");
                             footer.className = "blockquote-footer";
@@ -137,7 +141,7 @@
 
                             var liElement = document.createElement("li");
                             liElement.className = "list-group-item border-0";
-                            liElement.id = val.userId;
+                            liElement.id = val.studentId;
 
                             var aElement = document.createElement("a");
                             aElement.textContent = val.firstName + ' ' + val.lastName;
@@ -230,6 +234,42 @@
 
                 $("#availableProfessors").html(liElementsProfessors);
                 $("#professorName").append(hElement);
+            });
+
+            $(document).on("click", "#saveButton", function () {
+
+                var studentId = $("#studentName > h3").get();
+                var professorId = $("#professorName > h3").get();
+
+                var data = JSON.stringify({
+                    'studentId': studentId[0].id,
+                    'professorId': professorId[0].id
+                });
+
+                $.ajax({
+                    url: '@Url.Action("SaveStudentChoiceByAdminDecision", "Admins")',
+                    type: "POST",
+                    data: { studentId: studentId[0].id, assignedProfessorId: professorId[0].id},
+                    success: function (result) {
+                        Swal.queue([{
+                            title: 'Uspješno spremljeno!',
+                            confirmButtonText: 'Ok',
+                            text: "Uspješno ste dodijelili mentora odabranom studentu.",
+                            showLoaderOnConfirm: true,
+                            preConfirm: () => {
+                                location.reload();
+                            }
+                        }])
+
+                    },
+                    error: function () {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Greška...',
+                            text: 'Došlo je do pogreške, molimo vas pokušajte se odjaviti i opet prijaviti.',
+                        })
+                    }
+                });
             });
 
         });

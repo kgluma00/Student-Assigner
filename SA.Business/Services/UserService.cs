@@ -144,5 +144,10 @@ namespace SA.Business.Services
         {
             return await _saRepository.GetProfessorsByCourseAndMaxPoints(courseId);
         }
+
+        public async Task<int> SaveStudentChoiceByAdminDecision(int studentId, int assignedProfessorId)
+        {
+            return await _saRepository.SaveStudentChoiceByAdminDecision(studentId, assignedProfessorId);
+        }
     }
 }

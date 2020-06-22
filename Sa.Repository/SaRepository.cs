@@ -31,7 +31,7 @@ namespace Sa.Repository
             return await _applicationContext.SaveChangesAsync();
         }
 
-      
+
 
         public async Task<int> UpdateAsyncStudentEntity(List<Student> students)
         {
@@ -260,12 +260,12 @@ namespace Sa.Repository
                                       }).ToListAsync();
 
             var professors = await (from p in _applicationContext.Professors
-                                   select new ProfessorDto
-                                   {
-                                       Id = p.Id,
-                                       UserId = p.UserId,
-                                       MaxPoints = p.MaxPoints
-                                   }).ToListAsync();
+                                    select new ProfessorDto
+                                    {
+                                        Id = p.Id,
+                                        UserId = p.UserId,
+                                        MaxPoints = p.MaxPoints
+                                    }).ToListAsync();
 
             var choices = await _applicationContext.StudentProfessorChoices.ToListAsync();
 
@@ -289,41 +289,51 @@ namespace Sa.Repository
         {
 
             return await (from s in _applicationContext.Students
-                                            join u in _applicationContext.Users
-                                            on s.UserId equals u.Id
-                                            where s.CourseId == courseId && s.AssignedProfessor == 0
-                                            select new StudentUserDto
-                                            {
-                                                FirstName = u.FirstName,
-                                                LastName =  u.LastName,
-                                                UserId = s.UserId,
-                                                Points = s.Points,
-                                                AverageGrade = s.AverageGrade,
-                                                NmbrOfRptYears = s.NmbrOfRptYears,
-                                                Comment = s.Comment
-                                            }
+                          join u in _applicationContext.Users
+                          on s.UserId equals u.Id
+                          where s.CourseId == courseId && s.AssignedProfessor == 0
+                          select new StudentUserDto
+                          {
+                              StudentId = s.Id,
+                              FirstName = u.FirstName,
+                              LastName = u.LastName,
+                              UserId = s.UserId,
+                              Points = s.Points,
+                              AverageGrade = s.AverageGrade,
+                              NmbrOfRptYears = s.NmbrOfRptYears,
+                              Comment = s.Comment
+                          }
                                             ).ToListAsync();
 
         }
 
-        public async  Task<List<ProfessorBasicInfoDto>> GetProfessorsByCourseAndMaxPoints(byte courseId)
+        public async Task<List<ProfessorBasicInfoDto>> GetProfessorsByCourseAndMaxPoints(byte courseId)
         {
             return await (from p in _applicationContext.Professors
-                         join u in _applicationContext.Users
-                         on p.UserId equals u.Id
-                         where p.CourseId == courseId && p.MaxPoints > 0
-                         select new ProfessorBasicInfoDto
-                         {
-                             Id = u.Id,
-                             UserId = p.UserId,
-                             FirstName = u.FirstName,
-                             LastName = u.LastName,
-                             Email = u.Email,
-                             AreaOfInterestOne = p.AreaOfInterestOne,
-                             AreaOfInterestTwo = p.AreaOfInterestTwo,
-                             AreaOfInterestThree = p.AreaOfInterestThree
-                         }
+                          join u in _applicationContext.Users
+                          on p.UserId equals u.Id
+                          where p.CourseId == courseId && p.MaxPoints > 0
+                          select new ProfessorBasicInfoDto
+                          {
+                              Id = u.Id,
+                              UserId = p.UserId,
+                              FirstName = u.FirstName,
+                              LastName = u.LastName,
+                              Email = u.Email,
+                              AreaOfInterestOne = p.AreaOfInterestOne,
+                              AreaOfInterestTwo = p.AreaOfInterestTwo,
+                              AreaOfInterestThree = p.AreaOfInterestThree
+                          }
                    ).ToListAsync();
+        }
+
+        public async Task<int> SaveStudentChoiceByAdminDecision(int studentId, int assignedProfessorId)
+        {
+            var student = new Student { Id = studentId, AssignedProfessor = assignedProfessorId };
+            _applicationContext.Students.Attach(student);
+            _applicationContext.Entry(student).Property(x => x.AssignedProfessor).IsModified = true;
+
+            return await _applicationContext.SaveChangesAsync();
         }
     }
 }
