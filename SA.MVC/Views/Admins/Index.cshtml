@@ -89,11 +89,15 @@ else
                             url: '@Url.Action("GetAllStudentsAlgorithmInfo", "Admins")',
                             type: "GET",
                             success: function (resp) {
-                                Swal.fire(
-                                    'Obrada započeta!',
-                                    'Obrada i dodjela mentora je započela.',
-                                    'success',
-                                )
+                                Swal.queue([{
+                                    title: 'Pokretanje algoritam!',
+                                    confirmButtonText: 'Ok',
+                                    text: "Uspješno ste pokrenuli postupak dodjele mentora.",
+                                    showLoaderOnConfirm: true,
+                                    preConfirm: () => {
+                                        location.reload();
+                                    }
+                                }])
                             },
                             error: function (err) {
                                 Swal.fire({
