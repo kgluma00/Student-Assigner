@@ -5,6 +5,7 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using SA.Business.Interfaces;
@@ -26,12 +27,14 @@ namespace SA.MVC.Controllers
         }
 
         [HttpGet]
+        [AllowAnonymous]
         public ActionResult Login()
         {
             return View();
         }
 
         [HttpPost]
+        [AllowAnonymous]
         public async Task<ActionResult> Login(LoginDto dto)
         {
             var user = await _userService.Login(_mapper.Map<LoginDto, User>(dto));
@@ -72,5 +75,12 @@ namespace SA.MVC.Controllers
 
             return RedirectToAction("Login");
         }
+
+        [HttpGet]
+        public IActionResult NotFound()
+        {
+            return View();
+        }
+
     }
 }

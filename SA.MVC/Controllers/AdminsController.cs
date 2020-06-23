@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SA.Business.Interfaces;
 using SA.Core.Dtos;
@@ -10,6 +11,7 @@ using SA.MVC.Models;
 
 namespace SA.MVC.Controllers
 {
+    [Authorize]
     public class AdminsController : Controller
     {
         public IMapper _mapper { get; }

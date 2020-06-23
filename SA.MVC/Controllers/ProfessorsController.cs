@@ -3,11 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SA.Business.Interfaces;
 
 namespace SA.MVC.Controllers
 {
+    [Authorize]
     public class ProfessorsController : Controller
     {
         public IMapper _mapper { get; }
