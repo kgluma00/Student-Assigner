@@ -133,11 +133,10 @@
                     type: "GET",
                     data: { courseId: event.target.id },
                     success: function (result) {
-                        console.log(result);
                         $.each(result, function (idx, val) {
                             var footer = document.createElement("footer");
                             footer.className = "blockquote-footer";
-                            footer.textContent = val.comment + ', ' + val.points;
+                            footer.textContent = val.comment + ', ' + val.points + ' bodova;
 
                             var liElement = document.createElement("li");
                             liElement.className = "list-group-item border-0";
@@ -200,7 +199,6 @@
             });
 
             function handleButtonClickStudent(e) {
-                console.log("e: " + e);
                 var hElement = document.createElement("h3");
                 hElement.textContent = e.target.innerText;
                 hElement.className = "";
