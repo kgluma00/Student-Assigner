@@ -98,6 +98,8 @@ namespace SA.Business.Services
         {
             foreach (var student in studentInfoDtos)
             {
+                if (student.AssignedProfessor != 0)
+                    continue;
                 foreach (var professor in student.ProfessorDtos)
                 {
                     if (CheckProfessorAvailability(professor, student.StudyLevel))

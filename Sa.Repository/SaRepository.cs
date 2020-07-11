@@ -20,7 +20,7 @@ namespace Sa.Repository
             _applicationContext = applicationContext;
 
         }
-
+            
         public async Task<int> AddAsyncEntity<T>(List<T> entites) where T : class
         {
             foreach (var el in entites)
@@ -241,7 +241,7 @@ namespace Sa.Repository
 
         public async Task<bool> CheckIfSystemAlgorithmStarted()
         {
-            return await _applicationContext.Students.AnyAsync(ap => ap.AssignedProfessor != null);
+            return await _applicationContext.Students.AnyAsync(ap => ap.AssignedProfessor != null && ap.AssignedProfessor == 0);
         }
 
         public async Task<List<StudentInfoDto>> GetAllStudentsAlgorithmInfo()
@@ -291,7 +291,7 @@ namespace Sa.Repository
             return await (from s in _applicationContext.Students
                           join u in _applicationContext.Users
                           on s.UserId equals u.Id
-                          where s.CourseId == courseId && s.AssignedProfessor == 0
+                          where s.CourseId == courseId && (s.AssignedProfessor == 0 || s.AssignedProfessor == null)
                           select new StudentUserDto
                           {
                               StudentId = s.Id,
